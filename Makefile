@@ -202,12 +202,17 @@ clean-all: clean-envs clean-installer
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-sage-%-$(ARCH).list $(CYGWIN_SETUP)
+	$(eval ENV_TMP := $(shell mktemp -d))
 	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
 		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
-		--root "$$(cygpath -w -a $@)" \
+		--root "$$(cygpath -w -a $(ENV_TMP))" \
 		--arch $(ARCH) --no-admin --no-shortcuts --quiet-mode \
 		--packages $$($(TOOLS)/setup-package-list $<) \
 		$(CYGWIN_SETUP_FLAGS)
+
+	# Move the tmpdir into the final environment location
+	mv $(ENV_TMP) $@
+
 	# Install symlinks for CCACHE
 	if [ -x $@/usr/bin/ccache ]; then \
 		ln -s /usr/bin/ccache $@/usr/local/bin/gcc; \
