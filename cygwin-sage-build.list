@@ -202,8 +202,10 @@ perl_autorebase           5.22.2-1
 perl_base                 5.22.2-1
 pkg-config                0.29.1-1
 poppler-data              0.4.7-1
-python                    2.7.12-1
-python-tkinter            2.7.12-1
+python37                  3.7.7-1
+python37-devel            3.7.7-1
+python37-tkinter          3.7.7-1
+python37-urllib3          1.25.10-1
 rebase                    4.4.2-1
 rsync                     3.1.2-1
 sed                       4.2.2-3
