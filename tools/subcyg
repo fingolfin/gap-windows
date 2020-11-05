@@ -49,7 +49,9 @@ pid=$!
 # instead we just watch it with tail
 #
 # Some commands don't produce any output, so also ensure that the output file
-# exists first.
+# exists first.  But wait at least a second for the file to show up since
+# sometimes there can be a delay.
+sleep 1
 if [ -f "$subcyg_root$outtmp" ]; then
     tail -F --pid=$pid "$subcyg_root$outtmp" 2>/dev/null
     if [ $? -eq 130 ]; then
