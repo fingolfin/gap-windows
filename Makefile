@@ -91,7 +91,10 @@ CYGWIN_SETUP_URL=https://cygwin.com/$(CYGWIN_SETUP_NAME)
 CYGWIN_MIRROR=http://mirrors.kernel.org/sourceware/cygwin/
 CYGWIN_LOCAL_MIRROR=cygwin_mirror/
 ifeq (,$(wildcard $(CYGWIN_LOCAL_MIRROR)))
-CYGWIN_LOCAL_MIRROR=$(CYGWIN_MIRROR)
+CYGWIN_LOCAL_INSTALL_FLAGS=
+else
+CYGWIN_MIRROR=$(CYGWIN_LOCAL_MIRROR)
+CYGWIN_LOCAL_INSTALL_FLAGS=--local-install --local-package-dir "$$(cygpath -w -a .)"
 endif
 
 SAGE_INSTALLER=$(DIST)/SageMath-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
@@ -199,8 +202,8 @@ clean-all: clean-envs clean-installer
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-sage-%-$(ARCH).list $(CYGWIN_SETUP)
-	"$(CYGWIN_SETUP)" --site $(CYGWIN_LOCAL_MIRROR) \
-		--local-install --local-package-dir "$$(cygpath -w -a .)" \
+	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
+		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
 		--root "$$(cygpath -w -a $@)" \
 		--arch $(ARCH) --no-admin --no-shortcuts --quiet-mode \
 		--packages $$($(TOOLS)/setup-package-list $<) \
