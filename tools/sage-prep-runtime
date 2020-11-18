@@ -59,3 +59,11 @@ done
 # Strip debug symbols from exes and dlls, saving hundreds of MB
 find . -type f \( -name '*.exe' -o -name '*.dll' \) \
     -exec strip -g {} \;
+
+
+# Move stupid, misnamed giac docs: the directory name ends with a space when it
+# shouldn't, and InnoSetup has trouble with this
+BROKEN_GIAC_DOC_DIR='local/share/doc/giac/fr '
+if [ -d "$BROKEN_GIAC_DOC_DIR" ]; then
+    mv "$BROKEN_GIAC_DOC_DIR" local/share/doc/giac/fr
+fi
