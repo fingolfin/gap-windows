@@ -14,7 +14,8 @@ cd "$SAGE_ROOT_RUNTIME"
 
 # Clean up some files that are not needed at runtime
 rm -rf bootstrap config.* logs upstream local/var/tmp/sage/build/* \
-       local/var/lock/* src/build local/share/doc/sage/doctrees .git*
+       local/var/lock/* build/pkgs/sagelib/src src/build \
+       local/share/doc/sage/doctrees local/var/lib/sage/wheels .git*
 
 # This shouldn't be necessary but it seems to help ensure that the main
 # Makefile is newer than its prerequisites
