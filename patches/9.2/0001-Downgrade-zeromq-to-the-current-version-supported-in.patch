@@ -1,0 +1,22 @@
+From a5e443ee0cce5bfb28d566b6238b2a855e21a3d8 Mon Sep 17 00:00:00 2001
+From: "E. Madison Bray" <erik.bray@lri.fr>
+Date: Thu, 12 Nov 2020 15:06:52 +0100
+Subject: [PATCH] Downgrade zeromq to the current version supported in Cygwin,
+ which should still be good enough
+
+---
+ build/pkgs/zeromq/spkg-configure.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/pkgs/zeromq/spkg-configure.m4 b/build/pkgs/zeromq/spkg-configure.m4
+index a584a74cc2..ef64680313 100644
+--- a/build/pkgs/zeromq/spkg-configure.m4
++++ b/build/pkgs/zeromq/spkg-configure.m4
+@@ -1,3 +1,3 @@
+ SAGE_SPKG_CONFIGURE([zeromq], [
+-    AX_ZMQ([4.2.5], [], [sage_spkg_install_zeromq=yes])
++    AX_ZMQ([4.2.3], [], [sage_spkg_install_zeromq=yes])
+ ])
+-- 
+2.29.2
+
