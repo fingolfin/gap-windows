@@ -283,6 +283,15 @@ begin
 end;
 
 
+// Symlinks from the Cygwin runtime are stored in the .lnk file format
+// which is one of the different ways of storing symlinks supported by Cygwin;
+// for this to work they must have the READ ONLY attribute set on them.
+// When the files are compressed by InnoSetup they lose this attribute, so
+// we must have a list of files that are supposed to by symlinks, which is
+// created by the Makefile as <runtime-env>/etc/symlinks.lst and included in
+// the installer.  This procedure loops over all the files in this list and
+// applies the READ ONLY attribute to them so they can once again be recognized
+// by Cygwin as symlinks.
 procedure FixupSymlinks();
 var
     n: Integer;
@@ -299,10 +308,10 @@ begin
     WizardForm.StatusLabel.Caption := 'Fixing up symlinks...';
     for i := 0 to n - 1 do
     begin
-        filenam := filenames[i];
+        filenam := filenames[i] + '.lnk';
         WizardForm.FilenameLabel.Caption := Copy(filenam, 2, Length(filenam));
         WizardForm.ProgressGauge.Position := i;
-        Exec(ExpandConstant('{sys}\attrib.exe'), '+S ' + filenam,
+        Exec(ExpandConstant('{sys}\attrib.exe'), '+R ' + filenam,
              ExpandConstant('{#Runtime}'), SW_HIDE, ewNoWait, resultCode);
     end;
 end;

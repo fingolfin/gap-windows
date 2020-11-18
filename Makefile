@@ -126,7 +126,7 @@ $(foreach target,$(TARGETS),$(eval $(target): $$($(target))))
 
 
 $(env-runtime): $(cygwin-runtime) $(sage-runtime) $(cygwin-runtime-extras)
-	(cd $(ENV_RUNTIME_DIR) && find . -type l) > $(ENV_RUNTIME_DIR)/etc/symlinks.lst
+	$(TOOLS)/fixup-symlinks $(ENV_RUNTIME_DIR) > $(ENV_RUNTIME_DIR)/etc/symlinks.lst
 	@touch $@
 
 clean-env-runtime: clean-cygwin-runtime

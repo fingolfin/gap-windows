@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# This tool goes through a directory tree and recreates all symlinks it finds
+# as winsymlinks:lnk (.lnk shortcut files) since InnoSetup cannot store symlinks
+# as WSL reparse points, which are now how Cygwin creates symlinks by default
+# on Windows 10 on NTFS filesystems (see
+# https://cygwin.com/cygwin-ug-net/using.html#pathnames-symlinks); this changed
+# in Cygwin 3.1.
+#
+# There is also not an option I can find to force creation of old-style "magic cookie"
+# Cygwin symlinks which are what we used before.
+#
+# It also outputs the path to each link which can be used to create a list of all
+# symlinks in the tree.
+
+dirname="$1"
+cd "$dirname"
+
+export CYGWIN="winsymlinks:lnk"
+
+for link in $(find . -type l); do
+    # Recreate the link in the .lnk format
+    target="$(readlink "$link")"
+    rm -f "$link"
+    ln -s "$target" "$link"
+    echo "$link"
+done
