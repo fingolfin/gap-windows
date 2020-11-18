@@ -138,10 +138,7 @@ Name: "{#Runtime}\dev\mqueue"; Permissions: users-modify
 Name: "{#Runtime}\home\sage"; Permissions: users-modify
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{#Runtime}\etc\fstab.d"
-Type: filesandordirs; Name: "{#Runtime}\dev\shm"
-Type: filesandordirs; Name: "{#Runtime}\dev\mqueue"
-Type: files; Name: "{#Runtime}\*.stackdump"
+Type: filesandordirs; Name: "{app}"
 
 #define RunSage "/bin/bash --login -c '" + SageRootPosix + "/sage'"
 #define RunSageName "SageMath " + SageVersion
