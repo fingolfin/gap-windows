@@ -1,6 +1,14 @@
 Changelog for the Windows Installer
 ===================================
 
+0.6.1 (2020-11-28)
+------------------
+
+* Updated to Python 3.7.
+
+* Updated to Cygwin 3.1.x.
+
+
 0.6.0 (2020-02-13)
 ------------------
 
