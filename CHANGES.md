@@ -1,7 +1,7 @@
 Changelog for the Windows Installer
 ===================================
 
-0.6.2 (unreleased)
+0.6.2 (2021-01-05)
 ------------------
 
 * Reverted use of Cygwin's system package for libntl, which is not built
