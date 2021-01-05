@@ -29,7 +29,6 @@ libcrypt0             1.4-1
 libexpat1             2.2.0-0
 libffi-devel          3.2.1-2
 libffi6               3.2.1-2
-libflint-devel        2.5.2-2
 libfontconfig1        2.12.1-1
 libfreetype6          2.10.4-2
 libgc1                8.0.4-1
@@ -53,8 +52,6 @@ libmpc3               1.1.0-1
 libmpfr-devel         4.0.2-1
 libmpfr4              3.1.5-1
 libncursesw10         6.1-1.20190727
-libntl-devel          10.5.0-1
-libntl35              10.5.0-1
 libopenssl100         1.0.2j-1
 libpcre-devel         8.43-1
 libpcre1              8.43-1

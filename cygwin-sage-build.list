@@ -62,7 +62,6 @@ libexpat1                  2.2.0-0
 libfam0                    0.1.10-15
 libffi-devel               3.2.1-2
 libffi6                    3.2.1-2
-libflint-devel             2.5.2-2
 libfontconfig-common       2.12.1-1
 libfontconfig1             2.12.1-1
 libfreetype-devel          2.10.4-2
@@ -123,7 +122,6 @@ libnettle4                 2.7.1-1
 libnghttp2_14              1.14.0-1
 libnspr4                   4.13-1
 libnss3                    3.27.1-1
-libntl-devel               10.5.0-1
 libopenjpeg1               1.5.2-3
 libopenldap2_4_2           2.4.42-1
 libopenssl100              1.0.2j-1

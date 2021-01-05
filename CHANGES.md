@@ -1,6 +1,18 @@
 Changelog for the Windows Installer
 ===================================
 
+0.6.2 (unreleased)
+------------------
+
+* Reverted use of Cygwin's system package for libntl, which is not built
+  to be portable enough for enough users' CPUs.  Likewise reverted use of
+  system libflint package which depends on NTL.
+
+**NOTE**: If you haven't experienced problems with build 0.6.1 of Sage 9.2
+there is no need to upgrade to this build, as the issue this fixes only
+impacts some users depending on their CPU.
+
+
 0.6.1 (2020-11-28)
 ------------------
 
