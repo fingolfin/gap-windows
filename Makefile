@@ -213,6 +213,7 @@ $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-sage-%-$(ARCH).list $(CYGWIN_SETUP)
 		$(CYGWIN_SETUP_FLAGS)
 
 	# Move the tmpdir into the final environment location
+	mkdir -p $(ENVS)
 	mv $(ENV_TMP) $@
 
 	# Install symlinks for CCACHE
