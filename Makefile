@@ -89,7 +89,7 @@ SOURCES:=$(SAGEMATH_ISS) $(DOT_SAGE) $(ICONS)
 # URL to download the Cygwin setup.exe
 CYGWIN_SETUP_NAME=setup-$(ARCH).exe
 CYGWIN_SETUP=$(DOWNLOAD)/$(CYGWIN_SETUP_NAME)
-CYGWIN_SETUP_URL=https://cygwin.com/$(CYGWIN_SETUP_NAME)
+CYGWIN_SETUP_URL=https://www.cygwin.com/$(CYGWIN_SETUP_NAME)
 CYGWIN_MIRROR=http://mirrors.kernel.org/sourceware/cygwin/
 CYGWIN_LOCAL_MIRROR=cygwin_mirror/
 ifeq (,$(wildcard $(CYGWIN_LOCAL_MIRROR)))

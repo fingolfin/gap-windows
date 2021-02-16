@@ -4,7 +4,7 @@
 # as winsymlinks:lnk (.lnk shortcut files) since InnoSetup cannot store symlinks
 # as WSL reparse points, which are now how Cygwin creates symlinks by default
 # on Windows 10 on NTFS filesystems (see
-# https://cygwin.com/cygwin-ug-net/using.html#pathnames-symlinks); this changed
+# https://www.cygwin.com/cygwin-ug-net/using.html#pathnames-symlinks); this changed
 # in Cygwin 3.1.
 #
 # There is also not an option I can find to force creation of old-style "magic cookie"
