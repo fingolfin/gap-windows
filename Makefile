@@ -39,16 +39,16 @@ cygwin-runtime-extras=$(STAMPS)/cygwin-runtime-extras-$(SAGE_VERSION)-$(ARCH)
 ###############################################################################
 
 # Resource paths
-PATCHES=patches
-CYGWIN_EXTRAS=cygwin_extras
-RESOURCES=resources
-DOT_SAGE=dot_sage
+PATCHES?=patches
+CYGWIN_EXTRAS?=cygwin_extras
+RESOURCES?=resources
+DOT_SAGE?=dot_sage
 ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
 
 ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
 
-SAGE_GIT=git://git.sagemath.org/sage.git
+SAGE_GIT?=git://git.sagemath.org/sage.git
 SAGE_ROOT=/opt/sagemath-$(SAGE_VERSION)
 SAGE_ROOT_BUILD=$(ENV_BUILD_DIR)$(SAGE_ROOT)
 SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
@@ -79,7 +79,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
-SAGE_MAKEFILE=$(SAGE_ROOT_BUILD)/build/make/Makefile
+SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
 SAGE_STARTED=$(SAGE_ROOT_BUILD)/local/etc/sage-started.txt
 
 # Files used as input to ISCC
@@ -201,9 +201,10 @@ clean-envs: clean-env-runtime clean-env-build
 
 clean-all: clean-envs clean-installer
 
+PROGBASE?=sage
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
-$(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-sage-%-$(ARCH).list $(CYGWIN_SETUP)
+$(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-$(PROGBASE)-%-$(ARCH).list $(CYGWIN_SETUP)
 	$(eval ENV_TMP := $(shell mktemp -d))
 	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
 		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
@@ -238,12 +239,14 @@ $(SAGE_STARTED): $(SAGE_MAKEFILE)
 		"cd $(SAGE_ROOT) && $(SAGE_ENVVARS) ./sage -i $(SAGE_OPTIONAL_PACKAGES) && make build"
 
 
+SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure $(SAGE_CONFIGURE_FLAGS)"
 $(SAGE_MAKEFILE): $(SAGE_CONFIGURE)
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(SAGE_ROOT) && ./configure $(SAGE_CONFIGURE_FLAGS)"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_RUN_CONFIGURE_CMD)
 
 
+SAGE_MAKE_CONFIGURE_CMD?="cd $(SAGE_ROOT) && make configure"
 $(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(SAGE_ROOT) && make configure"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_MAKE_CONFIGURE_CMD)
 
 
 $(SAGE_ROOT_BUILD): $(cygwin-build)
