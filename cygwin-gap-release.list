@@ -1,0 +1,10 @@
+libgmp10   X
+libreadline7   X
+zlib0   X
+libncursesw10   X
+libpopt0   X
+libcurl4   X
+libidn2   X
+libssl1.1   X
+libzmq5   X
+singular X
