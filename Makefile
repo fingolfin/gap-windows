@@ -80,7 +80,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
 SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
-SAGE_STARTED=$(SAGE_ROOT_BUILD)/local/etc/sage-started.txt
+SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/sage-started.txt
 
 # Files used as input to ISCC
 SAGEMATH_ISS=SageMath.iss
@@ -158,13 +158,13 @@ $(env-build): $(cygwin-build) $(sage-build)
 clean-env-build: clean-sage-build clean-cygwin-build clean-installer
 	rm -f $(env-build)
 
-
+SAGE_REBUILD_CMD?="cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
+SAGE_BUILD_DOC_CMD?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make doc"
 
 $(sage-build): $(cygwin-build) $(SAGE_STARTED)
 	SHELL=/bin/dash $(SUBCYG) "$(ENV_BUILD_DIR)" \
-		  "cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" \
-		"cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make doc"
+		  $(SAGE_REBUILD_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_DOC_CMD)
 	@touch $@
 
 clean-sage-build:
@@ -229,14 +229,15 @@ $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-$(PROGBASE)-%-$(ARCH).list $(CYGWIN_SE
 	# environment may be updated
 	touch "$(STAMPS)/cygwin-$(subst $(ENVS)/,,$@)"
 
+SAGE_START_CMD?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make start"
+SAGE_BUILD_PACKAGES?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) ./sage -i $(SAGE_OPTIONAL_PACKAGES) && make build"
 
 $(SAGE_STARTED): $(SAGE_MAKEFILE)
-	$(SUBCYG) "$(ENV_BUILD_DIR)" \
-		"cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make start"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_START_CMD)
 	# Install pre-installed optional packages and run make build again to
 	# intall sagelib optional extensions that use those packages
-	$(SUBCYG) "$(ENV_BUILD_DIR)" \
-		"cd $(SAGE_ROOT) && $(SAGE_ENVVARS) ./sage -i $(SAGE_OPTIONAL_PACKAGES) && make build"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_PACKAGES)
+		
 
 
 SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure $(SAGE_CONFIGURE_FLAGS)"
