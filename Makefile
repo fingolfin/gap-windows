@@ -25,6 +25,8 @@ STAMPS?=.stamps
 # Path to the Inno Setup executable
 ISCC?="/cygdrive/c/Program Files (x86)/Inno Setup 5/ISCC.exe"
 
+PROGBASE?=sage
+PROG?=sagemath
 ################################################################################
 
 # Actual targets for the main build stages (the stamp files)
@@ -83,7 +85,7 @@ SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
 SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/sage-started.txt
 
 # Files used as input to ISCC
-SAGEMATH_ISS=SageMath.iss
+SAGEMATH_ISS?=SageMath.iss
 SOURCES:=$(SAGEMATH_ISS) $(DOT_SAGE) $(ICONS)
 
 # URL to download the Cygwin setup.exe
@@ -141,15 +143,17 @@ clean-sage-runtime:
 	rm -f $(sage-runtime)
 
 
+SAGE_REBASE_CMD?="cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
+SAGE_FIXUP_DOC_CMD?=tools/sage-fixup-doc-symlinks "$(SAGE_ROOT_RUNTIME)/local/share/doc/sage/html"
 $(SAGE_ROOT_RUNTIME): $(cygwin-runtime) $(sage-build)
 	[ -d $(dir $@) ] || mkdir $(dir $@)
 	cp -rp $(SAGE_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
-	$(TOOLS)/sage-prep-runtime "$(SAGE_ROOT_RUNTIME)"
+	$(TOOLS)/$(PROGBASE)-prep-runtime "$(SAGE_ROOT_RUNTIME)"
 	# Re-rebase everything
-	SHELL=/bin/dash $(SUBCYG) "$(ENV_RUNTIME_DIR)" \
-		  "cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
-	tools/sage-fixup-doc-symlinks "$(SAGE_ROOT_RUNTIME)/local/share/doc/sage/html"
+	#SHELL=/bin/dash $(SUBCYG) "$(ENV_RUNTIME_DIR)" \
+		  $(SAGE_REBASE_CMD)
+	$(SAGE_FIXUP_DOC_CMD)
 
 
 $(env-build): $(cygwin-build) $(sage-build)
@@ -173,7 +177,7 @@ clean-sage-build:
 
 
 $(cygwin-runtime-extras): $(cygwin-runtime)
-	$(TOOLS)/sage-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
+	$(TOOLS)/$(PROGBASE)-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
 		"$(SAGE_VERSION)"
 	# Set apt-cyg to use a non-local mirror in the runtime env
 	$(SUBCYG) "$(ENV_RUNTIME_DIR)" "apt-cyg mirror $(CYGWIN_MIRROR)"
@@ -201,7 +205,7 @@ clean-envs: clean-env-runtime clean-env-build
 
 clean-all: clean-envs clean-installer
 
-PROGBASE?=sage
+
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-$(PROGBASE)-%-$(ARCH).list $(CYGWIN_SETUP)

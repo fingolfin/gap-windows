@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Script which performs cleanup of files in the runtime environment in
+# preparation for bundling.  This performs various tasks such as removing
+# unneeded files, stripping binaries, etc.
+#
+# The one thing it does not do is to run rebase; this needs to be done using a
+# subcyg shell see the $(SAGE_ROOT_RUNTIME) target in the Makefile.
+set -x
+
+SAGE_ROOT_RUNTIME="$1"
+
+cd "$SAGE_ROOT_RUNTIME"
+
+# Strip debug symbols from exes and dlls, saving hundreds of MB
+find . -type f \( -name '*.exe' -o -name '*.dll' \) \
+    -exec strip -g {} \;
+

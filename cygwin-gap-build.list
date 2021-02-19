@@ -27,3 +27,6 @@ perl   X
 texlive                    X
 texlive-collection-basic   X
 texlive-collection-latex   X
+texlive-collection-latexrecommended   X
+texlive-collection-latexextra   X
+xdg-utils X

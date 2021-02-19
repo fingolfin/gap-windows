@@ -8,3 +8,4 @@ libidn2   X
 libssl1.1   X
 libzmq5   X
 singular X
+xdg-utils X
