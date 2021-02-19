@@ -7,6 +7,45 @@
 #define MyAppURL "https://www.gap-system.org"
 #define MyAppExeName "Gap-mintty.bat"
 
+#define SageGroupName MyAppName + " " + MyAppVersion
+
+#ifndef SageVersion
+  #error SageVersion must be defined--pass /DSageVersion=<version> to InnoSetup with the correct version
+#endif
+
+#ifndef InstallerVersion
+  #error InstallerVersion must be defined--pass /DInstallerVersion=<version> to InnoSetup with the correct version
+#endif
+
+#ifndef SageName
+  #error SageName must be defined--pass /DSageName=<name> to InnoSetup with the correct version
+#endif
+
+
+#ifndef SageArch
+  #define SageArch "x86_64"
+#endif
+
+#if SageArch == "x86_64"
+  #define MyArchitecturesAllowed "x64"
+#else
+  #define MyArchitecturesAllowed "x86 x64"
+#endif
+
+
+#ifndef EnvsDir
+  #define EnvsDir "envs"
+#endif
+
+#ifndef OutputDir
+  #define OutputDir "dist"
+#endif
+
+#define Source      EnvsDir + "\runtime-" + SageVersion + "-" + SageArch
+
+#define Runtime     "{app}\runtime"
+#define Bin         Runtime + "\bin"
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
@@ -24,7 +63,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=gap-setup
-Compression=lzma
+Compression=lzma/fast
 LZMANumBlockThreads=6
 SolidCompression=yes
 WizardStyle=modern

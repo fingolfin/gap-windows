@@ -2,4 +2,4 @@
 
 cd ~
 
-/opt/gap/gap
+/gap

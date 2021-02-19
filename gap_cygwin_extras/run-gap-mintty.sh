@@ -2,7 +2,7 @@
 
 cd ~
 
-/opt/gap/gap
+/gap
 
 
 if [ $? -ne 0 ]; then

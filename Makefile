@@ -51,7 +51,7 @@ ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
 
 SAGE_GIT?=git://git.sagemath.org/sage.git
-SAGE_ROOT=/opt/sagemath-$(SAGE_VERSION)
+SAGE_ROOT=/opt/$(PROG)-$(SAGE_VERSION)
 SAGE_ROOT_BUILD=$(ENV_BUILD_DIR)$(SAGE_ROOT)
 SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
 
@@ -101,7 +101,7 @@ CYGWIN_MIRROR=$(CYGWIN_LOCAL_MIRROR)
 CYGWIN_LOCAL_INSTALL_FLAGS=--local-install --local-package-dir "$$(cygpath -w -a .)"
 endif
 
-SAGE_INSTALLER=$(DIST)/SageMath-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
+SAGE_INSTALLER=$(DIST)/$(PROG)-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
 
 TOOLS=tools
 SUBCYG=$(TOOLS)/subcyg
@@ -115,7 +115,7 @@ all: $(SAGE_INSTALLER)
 
 $(SAGE_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
 	cd $(CUDIR)
-	$(ISCC) /DSageVersion=$(SAGE_VERSION) /DSageArch=$(ARCH) \
+	$(ISCC) /DSageName=$(PROG) /DSageVersion=$(SAGE_VERSION) /DSageArch=$(ARCH) \
 		/DInstallerVersion=$(INSTALLER_VERSION) \
 		/DSageTestInstaller=$(SAGE_TEST_INSTALLER) \
 		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(SAGEMATH_ISS)
