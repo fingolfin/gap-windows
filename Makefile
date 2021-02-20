@@ -82,7 +82,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
 SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
-SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/sage-started.txt
+SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/$(PROGBASE)-started.txt
 
 # Files used as input to ISCC
 SAGEMATH_ISS?=SageMath.iss
@@ -149,7 +149,7 @@ $(SAGE_ROOT_RUNTIME): $(cygwin-runtime) $(sage-build)
 	[ -d $(dir $@) ] || mkdir $(dir $@)
 	cp -rp $(SAGE_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
-	$(TOOLS)/$(PROGBASE)-prep-runtime "$(SAGE_ROOT_RUNTIME)"
+	$(TOOLS)/$(PROGBASE)-prep-runtime "$(SAGE_ROOT_RUNTIME)" "$(SAGE_ROOT)"
 	# Re-rebase everything
 	#SHELL=/bin/dash $(SUBCYG) "$(ENV_RUNTIME_DIR)" \
 		  $(SAGE_REBASE_CMD)

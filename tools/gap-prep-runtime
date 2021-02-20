@@ -9,6 +9,7 @@
 set -x
 
 SAGE_ROOT_RUNTIME="$1"
+SAGE_ROOT="$2"
 
 cd "$SAGE_ROOT_RUNTIME"
 ls
@@ -21,5 +22,8 @@ rm -rf .git
 find . -type f \( -name '*.exe' -o -name '*.dll' \) \
     -exec strip -g {} \;
 
-rm /gap
-ln -s $(pwd)/gap /gap
+rm -f ../../run-gap.sh
+
+echo "#!/usr/bin/env bash" > ../../run-gap.sh
+echo "cd ~" >> ../../run-gap.sh
+echo "${SAGE_ROOT}/gap" >> ../../run-gap.sh

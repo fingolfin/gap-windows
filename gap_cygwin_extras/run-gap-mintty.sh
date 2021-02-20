@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~
-
-/gap
+bash /run-gap.sh
 
 
 if [ $? -ne 0 ]; then
