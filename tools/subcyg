@@ -17,7 +17,7 @@ shift
 trap 'rm -f "$subcyg_root$outtmp" "$subcyg_root$pidtmp"' EXIT
 
 tmpfile_name() {
-    tmp=$(mktemp)
+    tmp=$(mktemp /subcyg.XXXXXXX)
     rm -f "$tmp"
     echo "$tmp"
 }
