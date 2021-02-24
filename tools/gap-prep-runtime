@@ -19,11 +19,14 @@ rm -f packages*tar*
 rm -rf .git
 
 # Strip debug symbols from exes and dlls, saving hundreds of MB
-find . -type f \( -name '*.exe' -o -name '*.dll' \) \
+find . -type f \( -name '*.exe' -o -name '*.dll' -o -name '*.a' -o -name '*.o' -o -name '*.so' \) \
     -exec strip -g {} \;
 
 rm -f ../../run-gap.sh
 
 echo "#!/usr/bin/env bash" > ../../run-gap.sh
-echo "cd ~" >> ../../run-gap.sh
+echo 'cd $(cygpath --mydocs)' >> ../../run-gap.sh
 echo "${SAGE_ROOT}/gap" >> ../../run-gap.sh
+
+rm -f ../../gapicon.ico
+cp cnf/cygwin/gapicon.ico ../../gapicon.ico

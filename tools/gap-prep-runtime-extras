@@ -15,12 +15,6 @@ fi
 
 cp -r "$CYGWIN_EXTRAS"/* "$ENV_RUNTIME_DIR"
 
-NSSWITCH="${ENV_RUNTIME_DIR}/etc/nsswitch.conf"
-NSSWITCH_LINE='db_home: /home/sage'
-if ! grep "$NSSWITCH_LINE" "$NSSWITCH" > /dev/null; then
-	echo "$NSSWITCH_LINE" >> "$NSSWITCH"
-fi
-
 # Set the package download cache to something sensible; otherwise it
 # will hard-code the package download cache used when building the
 # environment in the installer, which is not what we want

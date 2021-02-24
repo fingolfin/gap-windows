@@ -16,4 +16,4 @@ make --trace \
     SAGEMATH_ISS?=gap.iss \
     CYGWIN_EXTRAS=gap_cygwin_extras \
     SAGE_REBASE_CMD='"true"' \
-    SAGE_FIXUP_DOC_CMD='"true"'
+    SAGE_FIXUP_DOC_CMD='"true"' $*

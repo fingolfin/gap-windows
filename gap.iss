@@ -2,12 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "GAP"
-#define MyAppVersion "4.11"
-#define MyAppPublisher "Gap Group"
-#define MyAppURL "https://www.gap-system.org"
-#define MyAppExeName "Gap-mintty.bat"
 
-#define SageGroupName MyAppName + " " + MyAppVersion
 
 #ifndef SageVersion
   #error SageVersion must be defined--pass /DSageVersion=<version> to InnoSetup with the correct version
@@ -33,6 +28,14 @@
 #endif
 
 
+#define MyAppVersion SageVersion
+#define MyAppPublisher "Gap Group"
+#define MyAppURL "https://www.gap-system.org"
+#define MyAppExeName "Gap-mintty.bat"
+
+
+#define SageGroupName MyAppName + "-" + MyAppVersion
+
 #ifndef EnvsDir
   #define EnvsDir "envs"
 #endif
@@ -49,7 +52,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{AF1BC6F6-32FA-4E72-8F41-8862190D2F8F}
+AppId={#MyAppName}-{#MyAppVersion}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -62,11 +65,12 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=gap-setup
-Compression=lzma/fast
+OutputBaseFilename={#MyAppName}-{#MyAppVersion}-windows
+Compression=lzma
 LZMANumBlockThreads=6
 SolidCompression=yes
 WizardStyle=modern
+LicenseFile="{#Source}\opt\gap-{#MyAppVersion}\LICENSE"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -95,11 +99,11 @@ Source: "{#Source}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs cre
 Name: "{#Runtime}\etc\fstab.d"; Permissions: users-modify
 Name: "{#Runtime}\dev\shm"; Permissions: users-modify
 Name: "{#Runtime}\dev\mqueue"; Permissions: users-modify
-Name: "{#Runtime}\home\sage"; Permissions: users-modify
+; Name: "{#Runtime}\home\sage"; Permissions: users-modify
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}-{#SageVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico"
+Name: "{autodesktop}\{#MyAppName}-{#SageVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico" ; Tasks: desktopicon
 
 
 [Run]
