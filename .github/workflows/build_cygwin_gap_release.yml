@@ -10,8 +10,6 @@ jobs:
 
     runs-on: windows-latest
 
-    env:
-
     steps:
     # This sets git to use Linux line endings. While GAP should allow
     # Windows line endings in GAP files, we currently can't build GAP if the
