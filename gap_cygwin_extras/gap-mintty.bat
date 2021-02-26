@@ -2,4 +2,4 @@
 setlocal enableextensions
 set TERM=
 cd /d "%~dp0bin"
-start mintty.exe -s 120,40 --title GAP .\cygstart .\bash --login /run-gap-mintty.sh
+mintty.exe -s 120,40 --icon ..\gapicon.ico --Title GAP .\bash --login /run-gap-mintty.sh
