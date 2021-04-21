@@ -256,7 +256,16 @@ $(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
 
 $(SAGE_ROOT_BUILD): $(cygwin-build)
 	[ -d $(dir $(SAGE_ROOT_BUILD)) ] || mkdir $(dir $(SAGE_ROOT_BUILD))
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(SAGE_BRANCH) $(SAGE_GIT) $(SAGE_ROOT)"
+	# Get $(PROG) into the right place.
+	#   If there exists neighbouring directory $(PROG)-$(SAGE_VERSION) e.g.
+	#   gap-4.11.1, then use that version; move into $(SAGE_ROOT_BUILD).
+	#   Else clone into $(SAGE_ROOT) using $(SAGE_GIT) & $(SAGE_BRANCH).
+	# Note that $(SAGE_ROOT) = $(SAGE_ROOT_BUILD)/$(PROG)-$(SAGE_VERSION).
+	if [ -d ../$(PROG)-$(SAGE_VERSION) ]; then \
+		mv ../$(PROG)-$(SAGE_VERSION) $(SAGE_ROOT_BUILD); \
+	else \
+		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(SAGE_BRANCH) $(SAGE_GIT) $(SAGE_ROOT)"; \
+	fi
 	# Apply patches
 	if [ -d $(PATCHES)/$(SAGE_BRANCH) ]; then \
 		for patch in $(PATCHES)/$(SAGE_BRANCH)/*.patch; do \
