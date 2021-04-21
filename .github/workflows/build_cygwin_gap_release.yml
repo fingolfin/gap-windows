@@ -1,41 +1,38 @@
+name: GAP Windows release
+
 # Based on https://github.com/mit-plv/fiat-crypto/blob/master/.github/workflows/coq-windows.yml
 on:
   push:
   pull_request:
 
+env:
+  CHERE_INVOKING: 1
+
 jobs:
   build:
-    name : Cygwin Release - ${{ matrix.arch }}
+    name: Make Cygwin ${{ matrix.arch }} installer
     runs-on: windows-latest
 
     strategy:
       fail-fast: false
       matrix:
-        arch: ["x86", "x86_64"]
+        arch:
+          - x86_64
+          - x86
+        gapbranch:
+          - master
 
     steps:
-    # This sets git to use Linux line endings. While GAP should allow
-    # Windows line endings in GAP files, we currently can't build GAP if the
-    # whole source has Windows line endings
-    - name: Set git to use LF
-      run: |
-        git config --global core.autocrlf false
-        git config --global core.eol lf
-
     - uses: actions/checkout@v2
 
     - uses: gap-actions/setup-cygwin-for-gap@v1
 
-    # CHERE_INVOKING=1 lets us start a 'login shell' (to set paths) without changing directory
     - name: Compile GAP and download packages
-      run: |
-        @ECHO ON
-        SET CHERE_INVOKING=1
-        C:\cygwin64\bin\bash -l -c 'bash release_gap.sh ARCH=${{ matrix.arch }}'
-      shell: cmd
+      run: bash release_gap.sh ARCH=${{ matrix.arch }} SAGE_VERSION=${{ matrix.gapbranch }}
+      shell: C:\cygwin64\bin\bash.exe --login -o igncr '{0}'
 
     - name: Upload release
       uses: actions/upload-artifact@v2
       with:
-        name: Windows Installer - ${{ matrix.arch }}
+        name: GAP Windows installer - ${{ matrix.arch }}
         path: Output/*
