@@ -29,7 +29,7 @@
 
 
 #define MyAppVersion SageVersion
-#define MyAppPublisher "Gap Group"
+#define MyAppPublisher "The GAP Group"
 #define MyAppURL "https://www.gap-system.org"
 #define MyAppExeName "Gap-mintty.bat"
 
@@ -65,7 +65,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename={#MyAppName}-{#MyAppVersion}-{#SageArch}-windows
+OutputBaseFilename=gap-{#MyAppVersion}-{#SageArch}
 Compression=lzma
 LZMANumBlockThreads=6
 SolidCompression=yes
