@@ -10,6 +10,8 @@ automake   X
 autoconf X
 libtool   X
 libgmp-devel   X
+libmpc-devel   x
+libmpfr-devel   X
 libreadline-devel   X
 libncurses-devel   X
 libpopt-devel   X
