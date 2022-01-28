@@ -9,8 +9,9 @@ make   X
 automake   X
 autoconf X
 libtool   X
+lib4ti2-util   X
 libgmp-devel   X
-libmpc-devel   x
+libmpc-devel   X
 libmpfr-devel   X
 libreadline-devel   X
 libncurses-devel   X
