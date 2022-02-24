@@ -1,4 +1,7 @@
+lib4ti2-util   X
 libgmp10   X
+libmpc3 X
+limpfr6 X
 libreadline7   X
 zlib0   X
 libncursesw10   X
@@ -10,5 +13,4 @@ libzmq5   X
 singular X
 xdg-utils X
 graphviz x
-lib4ti2-util   X
 cddlib0   X
