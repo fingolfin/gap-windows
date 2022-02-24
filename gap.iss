@@ -31,7 +31,7 @@
 #define MyAppVersion SageVersion
 #define MyAppPublisher "The GAP Group"
 #define MyAppURL "https://www.gap-system.org"
-#define MyAppExeName "Gap-mintty.bat"
+#define MyAppExeName "gap-mintty.bat"
 
 
 #define SageGroupName MyAppName + "-" + MyAppVersion
@@ -60,13 +60,16 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
+ArchitecturesAllowed={#MyArchitecturesAllowed}
+ArchitecturesInstallIn64BitMode=x64
+ChangesEnvironment=true
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=gap-{#MyAppVersion}-{#SageArch}
-Compression=lzma
+Compression=lzma2
 LZMANumBlockThreads=6
 SolidCompression=yes
 WizardStyle=modern
@@ -79,8 +82,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#Source}\Gap.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#Source}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "gap_resources\gap.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "gap_resources\gap-mintty.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#Source}\*"; DestDir: "{#Runtime}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#Source}\gapicon.ico"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PostInstall;
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 ; InnoSetup will not create empty directories found when including files
