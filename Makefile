@@ -40,8 +40,8 @@ cygwin-runtime-extras=$(STAMPS)/cygwin-runtime-extras-$(SAGE_VERSION)-$(ARCH)
 # Resource paths
 PATCHES?=patches
 CYGWIN_EXTRAS?=cygwin_extras
-RESOURCES?=resources
-ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
+#RESOURCES?=resources
+#ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
 
 ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
@@ -74,7 +74,7 @@ SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/gap-started.txt
 
 # Files used as input to ISCC
 SAGEMATH_ISS?=gap.iss
-SOURCES:=$(SAGEMATH_ISS) $(ICONS)
+SOURCES:=$(SAGEMATH_ISS) #$(ICONS)
 
 # URL to download the Cygwin setup.exe
 CYGWIN_SETUP_NAME=setup-$(ARCH).exe
