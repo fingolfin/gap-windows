@@ -93,11 +93,7 @@ Source: "{#Source}\gapicon.ico"; DestDir: "{app}"; Flags: ignoreversion; AfterIn
 ; recursively in the [Files] section, so any directories that must exist
 ; (but start out empty) in the cygwin distribution must be created
 ;
-; /etc/fstab.d is where user-specific mount tables go--this is used in
-; sage for windows by /etc/sagerc to set up the /dot_sage mount point for
-; each user's DOT_SAGE directory, since the actual path name might contain
-; spaces and other special characters not handled well by some software that
-; uses DOT_SAGE
+; /etc/fstab.d is where user-specific mount tables go
 ;
 ; /dev/shm and /dev/mqueue are used by the system for POSIX semaphores, shared
 ; memory, and message queues and must be created world-writeable
