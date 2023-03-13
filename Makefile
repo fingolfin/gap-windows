@@ -24,8 +24,6 @@ STAMPS?=.stamps
 # Path to the Inno Setup executable
 ISCC?="/cygdrive/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
 
-PROGBASE?=gap
-PROG?=gap
 ################################################################################
 
 # Actual targets for the main build stages (the stamp files)
@@ -49,7 +47,7 @@ ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
 
 SAGE_GIT?=https://github.com/gap-system/gap
-SAGE_ROOT=/opt/$(PROG)-$(SAGE_VERSION)
+SAGE_ROOT=/opt/gap-$(SAGE_VERSION)
 SAGE_ROOT_BUILD=$(ENV_BUILD_DIR)$(SAGE_ROOT)
 SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
 
@@ -72,7 +70,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
 SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/Makefile
-SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/$(PROGBASE)-started.txt
+SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/gap-started.txt
 
 # Files used as input to ISCC
 SAGEMATH_ISS?=gap.iss
@@ -91,7 +89,7 @@ CYGWIN_MIRROR=$(CYGWIN_LOCAL_MIRROR)
 CYGWIN_LOCAL_INSTALL_FLAGS=--local-install --local-package-dir "$$(cygpath -w -a .)"
 endif
 
-SAGE_INSTALLER=$(DIST)/$(PROG)-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
+SAGE_INSTALLER=$(DIST)/gap-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
 
 TOOLS=tools
 SUBCYG=$(TOOLS)/subcyg
@@ -105,7 +103,7 @@ all: $(SAGE_INSTALLER)
 
 $(SAGE_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
 	cd $(CUDIR)
-	$(ISCC) /DSageName=$(PROG) /DSageVersion=$(SAGE_VERSION) /DSageArch=$(ARCH) /Q \
+	$(ISCC) /DSageName=gap /DSageVersion=$(SAGE_VERSION) /DSageArch=$(ARCH) /Q \
 		/DInstallerVersion=$(INSTALLER_VERSION) \
 		/DSageTestInstaller=$(SAGE_TEST_INSTALLER) \
 		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(SAGEMATH_ISS)
@@ -137,7 +135,7 @@ $(SAGE_ROOT_RUNTIME): $(cygwin-runtime) $(sage-build)
 	[ -d $(dir $@) ] || mkdir $(dir $@)
 	cp -rp $(SAGE_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
-	$(TOOLS)/$(PROGBASE)-prep-runtime "$(SAGE_ROOT_RUNTIME)" "$(SAGE_ROOT)"
+	$(TOOLS)/gap-prep-runtime "$(SAGE_ROOT_RUNTIME)" "$(SAGE_ROOT)"
 
 
 $(env-build): $(cygwin-build) $(sage-build)
@@ -158,7 +156,7 @@ clean-sage-build:
 
 
 $(cygwin-runtime-extras): $(cygwin-runtime)
-	$(TOOLS)/$(PROGBASE)-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
+	$(TOOLS)/gap-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
 		"$(SAGE_VERSION)"
 	# Set apt-cyg to use a non-local mirror in the runtime env
 	$(SUBCYG) "$(ENV_RUNTIME_DIR)" "apt-cyg mirror $(CYGWIN_MIRROR)"
@@ -189,7 +187,7 @@ clean-all: clean-envs clean-installer
 
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
-$(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-$(PROGBASE)-%-$(ARCH).list $(CYGWIN_SETUP)
+$(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	$(eval ENV_TMP := $(shell mktemp -d))
 	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
 		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
@@ -237,13 +235,13 @@ $(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
 
 $(SAGE_ROOT_BUILD): $(cygwin-build)
 	[ -d $(dir $(SAGE_ROOT_BUILD)) ] || mkdir $(dir $(SAGE_ROOT_BUILD))
-	# Get $(PROG) into the right place.
-	#   If there exists neighbouring directory $(PROG)-$(SAGE_VERSION) e.g.
+	# Get gap into the right place.
+	#   If there exists neighbouring directory gap-$(SAGE_VERSION) e.g.
 	#   gap-4.11.1, then use that version; move into $(SAGE_ROOT_BUILD).
 	#   Else clone into $(SAGE_ROOT) using $(SAGE_GIT) & $(SAGE_BRANCH).
-	# Note that $(SAGE_ROOT) = $(SAGE_ROOT_BUILD)/$(PROG)-$(SAGE_VERSION).
-	if [ -d ../$(PROG)-$(SAGE_VERSION) ]; then \
-		mv ../$(PROG)-$(SAGE_VERSION) $(SAGE_ROOT_BUILD); \
+	# Note that $(SAGE_ROOT) = $(SAGE_ROOT_BUILD)/gap-$(SAGE_VERSION).
+	if [ -d ../gap-$(SAGE_VERSION) ]; then \
+		mv ../gap-$(SAGE_VERSION) $(SAGE_ROOT_BUILD); \
 	else \
 		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(SAGE_BRANCH) $(SAGE_GIT) $(SAGE_ROOT)"; \
 	fi
