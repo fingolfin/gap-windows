@@ -22,10 +22,10 @@ ENVS?=envs
 STAMPS?=.stamps
 
 # Path to the Inno Setup executable
-ISCC?="/cygdrive/c/Program Files (x86)/Inno Setup 5/ISCC.exe"
+ISCC?="/cygdrive/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
 
-PROGBASE?=sage
-PROG?=sagemath
+PROGBASE?=gap
+PROG?=gap
 ################################################################################
 
 # Actual targets for the main build stages (the stamp files)
@@ -49,7 +49,7 @@ ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
 ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
 
-SAGE_GIT?=git://git.sagemath.org/sage.git
+SAGE_GIT?=https://github.com/gap-system/gap
 SAGE_ROOT=/opt/$(PROG)-$(SAGE_VERSION)
 SAGE_ROOT_BUILD=$(ENV_BUILD_DIR)$(SAGE_ROOT)
 SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
@@ -76,7 +76,7 @@ SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
 SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/$(PROGBASE)-started.txt
 
 # Files used as input to ISCC
-SAGEMATH_ISS?=SageMath.iss
+SAGEMATH_ISS?=gap.iss
 SOURCES:=$(SAGEMATH_ISS) $(DOT_SAGE) $(ICONS)
 
 # URL to download the Cygwin setup.exe
@@ -134,17 +134,11 @@ clean-sage-runtime:
 	rm -f $(sage-runtime)
 
 
-SAGE_REBASE_CMD?="cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
-SAGE_FIXUP_DOC_CMD?=tools/sage-fixup-doc-symlinks "$(SAGE_ROOT_RUNTIME)/local/share/doc/sage/html"
 $(SAGE_ROOT_RUNTIME): $(cygwin-runtime) $(sage-build)
 	[ -d $(dir $@) ] || mkdir $(dir $@)
 	cp -rp $(SAGE_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
 	$(TOOLS)/$(PROGBASE)-prep-runtime "$(SAGE_ROOT_RUNTIME)" "$(SAGE_ROOT)"
-	# Re-rebase everything
-	#SHELL=/bin/dash $(SUBCYG) "$(ENV_RUNTIME_DIR)" \
-		  $(SAGE_REBASE_CMD)
-	$(SAGE_FIXUP_DOC_CMD)
 
 
 $(env-build): $(cygwin-build) $(sage-build)
@@ -153,12 +147,9 @@ $(env-build): $(cygwin-build) $(sage-build)
 clean-env-build: clean-sage-build clean-cygwin-build clean-installer
 	rm -f $(env-build)
 
-SAGE_REBUILD_CMD?="cd $(SAGE_ROOT) && local/bin/sage-rebaseall.sh local"
-SAGE_BUILD_DOC_CMD?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make doc"
+SAGE_BUILD_DOC_CMD?="cd $(SAGE_ROOT) && make doc"
 
 $(sage-build): $(cygwin-build) $(SAGE_STARTED)
-	SHELL=/bin/dash $(SUBCYG) "$(ENV_BUILD_DIR)" \
-		  $(SAGE_REBUILD_CMD)
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_DOC_CMD)
 	@touch $@
 
