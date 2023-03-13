@@ -5,8 +5,7 @@ TARGETS=env-build env-runtime cygwin-build cygwin-runtime sage-build \
 
 ############################ Configurable Variables ###########################
 
-# Can be x86 or x86_64
-ARCH?=x86_64
+ARCH=x86_64
 
 # Set to 1 to build a test version of the installer for testing the installer
 # itself itself; it excludes Sage but is faster to build and install
