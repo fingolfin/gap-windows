@@ -11,7 +11,7 @@ ARCH=x86_64
 # itself itself; it excludes Sage but is faster to build and install
 SAGE_TEST_INSTALLER?=0
 
-SAGE_VERSION?=develop
+SAGE_VERSION?=master
 SAGE_BRANCH?=$(SAGE_VERSION)
 INSTALLER_VERSION=$(shell cat version.txt)
 
@@ -71,7 +71,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
-SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/build/make/Makefile
+SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/Makefile
 SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/$(PROGBASE)-started.txt
 
 # Files used as input to ISCC
@@ -214,8 +214,8 @@ $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-$(PROGBASE)-%-$(ARCH).list $(CYGWIN_SE
 	# environment may be updated
 	touch "$(STAMPS)/cygwin-$(subst $(ENVS)/,,$@)"
 
-SAGE_START_CMD?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) make start"
-SAGE_BUILD_PACKAGES?="cd $(SAGE_ROOT) && $(SAGE_ENVVARS) ./sage -i $(SAGE_OPTIONAL_PACKAGES) && make build"
+SAGE_START_CMD?="cd $(SAGE_ROOT) && make"
+SAGE_BUILD_PACKAGES?="cd $(SAGE_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
 
 $(SAGE_STARTED): $(SAGE_MAKEFILE)
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_START_CMD)
