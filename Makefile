@@ -57,14 +57,6 @@ SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
 
 N_CPUS=$(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 
-# TODO: These variables should be made dependent on the Sage version being
-# built, as we may need to change this from version to version.  In practice
-# though we usually just care about building the latest version.
-# NOTE: The latest version, 9.2, still does not work with system GMP.
-# NOTE: The latest version, 9.2, defaults to Python 3.8 but works with
-#       Python 3.7 if we specify it.
-override SAGE_CONFIGURE_FLAGS:=--with-mp=system --with-python=python3.7 $(SAGE_CONFIGURE_FLAGS)
-
 # NOTE: Be very careful about quoting here; we need literal
 # quotes or else they will be stripped when exec'ing bash
 # NOTE: FFLAS_FFPACK_CONFIGURE is needed to work around a regression introduced
@@ -244,12 +236,12 @@ $(SAGE_STARTED): $(SAGE_MAKEFILE)
 		
 
 
-SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure $(SAGE_CONFIGURE_FLAGS)"
+SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && make -j2"
 $(SAGE_MAKEFILE): $(SAGE_CONFIGURE)
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_RUN_CONFIGURE_CMD)
 
 
-SAGE_MAKE_CONFIGURE_CMD?="cd $(SAGE_ROOT) && make configure"
+SAGE_MAKE_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure"
 $(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_MAKE_CONFIGURE_CMD)
 
