@@ -18,7 +18,6 @@ jobs:
       matrix:
         arch:
           - x86_64
-          - x86
         gapbranch:
           - master
 
