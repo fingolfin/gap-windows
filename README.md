@@ -1,15 +1,12 @@
-SageMath for Windows
-====================
+GAP for Windows
+===============
 
-Build files and instructions for the Cygwin-compatible build of Sage and
+Build files and instructions for the Cygwin-compatible build of GAP and
 its executable installer and auxiliary files.
 
-You can find the latest release (for now) at https://github.com/sagemath/sage-windows/releases
-
-Occasionally new versions of SageMath for Windows are released independently
-of the Sage version (e.g. to make improvements with the Windows installer
-itself).  The changes between installer versions are listed in the
-[changelog](CHANGES.md).
+This is a heavily modified fork of <https://github.com/sagemath/sage-windows/>.
+Many thanks to E. M. Bray for their hard work creating and maintaining it
+over many years
 
 Instructions
 ============
