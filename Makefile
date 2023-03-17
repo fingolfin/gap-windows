@@ -13,7 +13,7 @@ SAGE_TEST_INSTALLER?=0
 
 SAGE_VERSION?=master
 SAGE_BRANCH?=$(SAGE_VERSION)
-INSTALLER_VERSION=$(shell cat version.txt)
+INSTALLER_VERSION=0.6.3
 
 # Output paths
 DIST?=dist
