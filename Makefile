@@ -70,7 +70,7 @@ SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 # Outputs representing success in the Sage build process
 SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
 SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/Makefile
-SAGE_STARTED?=$(SAGE_ROOT_BUILD)/local/etc/gap-started.txt
+SAGE_STARTED?=$(SAGE_ROOT_BUILD)/gap
 
 # Files used as input to ISCC
 SAGEMATH_ISS?=gap.iss
