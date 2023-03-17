@@ -154,10 +154,14 @@ clean-sage-build:
 
 
 $(cygwin-runtime-extras): $(cygwin-runtime)
+	echo "::group::gap-prep-runtime-extras"
 	$(TOOLS)/gap-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
 		"$(SAGE_VERSION)"
+	echo "::endgroup::"
 	# Set apt-cyg to use a non-local mirror in the runtime env
+	echo "::group::apt-cyg mirror"
 	$(SUBCYG) "$(ENV_RUNTIME_DIR)" "apt-cyg mirror $(CYGWIN_MIRROR)"
+	echo "::endgroup::"
 	@touch $@
 
 # Right now the only effective way to roll back cygwin-runtime-extras
@@ -214,21 +218,29 @@ SAGE_START_CMD?="cd $(SAGE_ROOT) && make"
 SAGE_BUILD_PACKAGES?="cd $(SAGE_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
 
 $(SAGE_STARTED): $(SAGE_MAKEFILE)
+	echo "::group::Start"
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_START_CMD)
+	echo "::endgroup::"
 	# Install pre-installed optional packages and run make build again to
 	# intall sagelib optional extensions that use those packages
+	echo "::group::Build Packages"
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_PACKAGES)
+	echo "::endgroup::"
 		
 
 
 SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && make -j2"
 $(SAGE_MAKEFILE): $(SAGE_CONFIGURE)
+	echo "::group::make"
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_RUN_CONFIGURE_CMD)
+	echo "::endgroup::"
 
 
 SAGE_MAKE_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure"
 $(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
+	echo "::group::configure"
 	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_MAKE_CONFIGURE_CMD)
+	echo "::endgroup::"
 
 
 $(SAGE_ROOT_BUILD): $(cygwin-build)
