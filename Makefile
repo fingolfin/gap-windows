@@ -144,10 +144,8 @@ $(env-build): $(cygwin-build) $(sage-build)
 clean-env-build: clean-sage-build clean-cygwin-build clean-installer
 	rm -f $(env-build)
 
-SAGE_BUILD_DOC_CMD?="cd $(SAGE_ROOT) && make doc"
-
 $(sage-build): $(cygwin-build) $(SAGE_STARTED)
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_DOC_CMD)
+	# TODO: remove this, does nothing
 	@touch $@
 
 clean-sage-build:
