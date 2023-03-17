@@ -1,5 +1,5 @@
-TARGETS=env-build env-runtime cygwin-build cygwin-runtime sage-build \
-        sage-runtime cygwin-extras-runtime
+TARGETS=env-build env-runtime cygwin-build cygwin-runtime gap-build \
+        gap-runtime cygwin-extras-runtime
 .PHONY: all $(TARGETS) $(addprefix clean-,$(TARGETS)) clean-envs \
 	    clean-installer clean-all
 
@@ -7,8 +7,8 @@ TARGETS=env-build env-runtime cygwin-build cygwin-runtime sage-build \
 
 ARCH=x86_64
 
-SAGE_VERSION?=master
-SAGE_BRANCH?=$(SAGE_VERSION)
+GAP_VERSION?=master
+GAP_BRANCH?=$(GAP_VERSION)
 INSTALLER_VERSION=0.6.3
 
 # Output paths
@@ -23,13 +23,13 @@ ISCC?="/cygdrive/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
 ################################################################################
 
 # Actual targets for the main build stages (the stamp files)
-env-build=$(STAMPS)/env-build-$(SAGE_VERSION)-$(ARCH)
-env-runtime=$(STAMPS)/env-runtime-$(SAGE_VERSION)-$(ARCH)
-cygwin-build=$(STAMPS)/cygwin-build-$(SAGE_VERSION)-$(ARCH)
-cygwin-runtime=$(STAMPS)/cygwin-runtime-$(SAGE_VERSION)-$(ARCH)
-sage-build=$(STAMPS)/sage-build-$(SAGE_VERSION)-$(ARCH)
-sage-runtime=$(STAMPS)/sage-runtime-$(SAGE_VERSION)-$(ARCH)
-cygwin-runtime-extras=$(STAMPS)/cygwin-runtime-extras-$(SAGE_VERSION)-$(ARCH)
+env-build=$(STAMPS)/env-build-$(GAP_VERSION)-$(ARCH)
+env-runtime=$(STAMPS)/env-runtime-$(GAP_VERSION)-$(ARCH)
+cygwin-build=$(STAMPS)/cygwin-build-$(GAP_VERSION)-$(ARCH)
+cygwin-runtime=$(STAMPS)/cygwin-runtime-$(GAP_VERSION)-$(ARCH)
+gap-build=$(STAMPS)/gap-build-$(GAP_VERSION)-$(ARCH)
+gap-runtime=$(STAMPS)/gap-runtime-$(GAP_VERSION)-$(ARCH)
+cygwin-runtime-extras=$(STAMPS)/cygwin-runtime-extras-$(GAP_VERSION)-$(ARCH)
 
 ###############################################################################
 
@@ -39,13 +39,13 @@ CYGWIN_EXTRAS?=cygwin_extras
 #RESOURCES?=resources
 #ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
 
-ENV_BUILD_DIR=$(ENVS)/build-$(SAGE_VERSION)-$(ARCH)
-ENV_RUNTIME_DIR=$(ENVS)/runtime-$(SAGE_VERSION)-$(ARCH)
+ENV_BUILD_DIR=$(ENVS)/build-$(GAP_VERSION)-$(ARCH)
+ENV_RUNTIME_DIR=$(ENVS)/runtime-$(GAP_VERSION)-$(ARCH)
 
-SAGE_GIT?=https://github.com/gap-system/gap
-SAGE_ROOT=/opt/gap-$(SAGE_VERSION)
-SAGE_ROOT_BUILD=$(ENV_BUILD_DIR)$(SAGE_ROOT)
-SAGE_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(SAGE_ROOT)
+GAP_GIT?=https://github.com/gap-system/gap
+GAP_ROOT=/opt/gap-$(GAP_VERSION)
+GAP_ROOT_BUILD=$(ENV_BUILD_DIR)$(GAP_ROOT)
+GAP_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(GAP_ROOT)
 
 N_CPUS=$(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 
@@ -53,24 +53,24 @@ N_CPUS=$(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 # quotes or else they will be stripped when exec'ing bash
 # NOTE: FFLAS_FFPACK_CONFIGURE is needed to work around a regression introduced
 # in Sage 8.9: https://trac.sagemath.org/ticket/27444#comment:34
-SAGE_ENVVARS:=\
-	SAGE_NUM_THREADS=$(N_CPUS) \
-	SAGE_INSTALL_CCACHE=yes \
+GAP_ENVVARS:=\
+	GAP_NUM_THREADS=$(N_CPUS) \
+	GAP_INSTALL_CCACHE=yes \
 	CCACHE_DIR=\"$(HOME)/.ccache\" \
-	SAGE_FAT_BINARY=yes \
+	GAP_FAT_BINARY=yes \
     FFLAS_FFPACK_CONFIGURE=--disable-openmp \
 	MAKE=\"make -j$(N_CPUS)\"
 
-SAGE_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
+GAP_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 
-# Outputs representing success in the Sage build process
-SAGE_CONFIGURE=$(SAGE_ROOT_BUILD)/configure
-SAGE_MAKEFILE?=$(SAGE_ROOT_BUILD)/Makefile
-SAGE_STARTED?=$(SAGE_ROOT_BUILD)/gap
+# Outputs representing success in the GAP build process
+GAP_CONFIGURE=$(GAP_ROOT_BUILD)/configure
+GAP_MAKEFILE?=$(GAP_ROOT_BUILD)/Makefile
+GAP_STARTED?=$(GAP_ROOT_BUILD)/gap
 
 # Files used as input to ISCC
-SAGEMATH_ISS?=gap.iss
-SOURCES:=$(SAGEMATH_ISS) #$(ICONS)
+GAP_ISS?=gap.iss
+SOURCES:=$(GAP_ISS) #$(ICONS)
 
 # URL to download the Cygwin setup.exe
 CYGWIN_SETUP_NAME=setup-$(ARCH).exe
@@ -85,7 +85,7 @@ CYGWIN_MIRROR=$(CYGWIN_LOCAL_MIRROR)
 CYGWIN_LOCAL_INSTALL_FLAGS=--local-install --local-package-dir "$$(cygpath -w -a .)"
 endif
 
-SAGE_INSTALLER=$(DIST)/gap-$(SAGE_VERSION)-v$(INSTALLER_VERSION).exe
+GAP_INSTALLER=$(DIST)/gap-$(GAP_VERSION)-v$(INSTALLER_VERSION).exe
 
 TOOLS=tools
 SUBCYG=$(TOOLS)/subcyg
@@ -95,22 +95,22 @@ DIRS=$(DIST) $(DOWNLOAD) $(ENVS) $(STAMPS)
 
 ################################################################################
 
-all: $(SAGE_INSTALLER)
+all: $(GAP_INSTALLER)
 
-$(SAGE_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
+$(GAP_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
 	cd $(CUDIR)
-	$(ISCC) /DGapName=gap /DGapVersion=$(SAGE_VERSION) /DGapArch=$(ARCH) /Q \
+	$(ISCC) /DGapName=gap /DGapVersion=$(GAP_VERSION) /DGapArch=$(ARCH) /Q \
 		/DInstallerVersion=$(INSTALLER_VERSION) \
-		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(SAGEMATH_ISS)
+		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(GAP_ISS)
 
 clean-installer:
-	rm -f $(SAGE_INSTALLER)
+	rm -f $(GAP_INSTALLER)
 
 
 $(foreach target,$(TARGETS),$(eval $(target): $$($(target))))
 
 
-$(env-runtime): $(cygwin-runtime) $(sage-runtime) $(cygwin-runtime-extras)
+$(env-runtime): $(cygwin-runtime) $(gap-runtime) $(cygwin-runtime-extras)
 	$(TOOLS)/fixup-symlinks $(ENV_RUNTIME_DIR) > $(ENV_RUNTIME_DIR)/etc/symlinks.lst
 	@touch $@
 
@@ -118,40 +118,40 @@ clean-env-runtime: clean-cygwin-runtime
 	rm -f $(env-runtime)
 
 
-$(sage-runtime): $(SAGE_ROOT_RUNTIME)
+$(gap-runtime): $(GAP_ROOT_RUNTIME)
 	@touch $@
 
-clean-sage-runtime:
-	rm -rf $(SAGE_ROOT_RUNTIME)
-	rm -f $(sage-runtime)
+clean-gap-runtime:
+	rm -rf $(GAP_ROOT_RUNTIME)
+	rm -f $(gap-runtime)
 
 
-$(SAGE_ROOT_RUNTIME): $(cygwin-runtime) $(sage-build)
+$(GAP_ROOT_RUNTIME): $(cygwin-runtime) $(gap-build)
 	[ -d $(dir $@) ] || mkdir $(dir $@)
-	cp -rp $(SAGE_ROOT_BUILD) $(dir $@)
+	cp -rp $(GAP_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
-	$(TOOLS)/gap-prep-runtime "$(SAGE_ROOT_RUNTIME)" "$(SAGE_ROOT)"
+	$(TOOLS)/gap-prep-runtime "$(GAP_ROOT_RUNTIME)" "$(GAP_ROOT)"
 
 
-$(env-build): $(cygwin-build) $(sage-build)
+$(env-build): $(cygwin-build) $(gap-build)
 	@touch $@
 
-clean-env-build: clean-sage-build clean-cygwin-build clean-installer
+clean-env-build: clean-gap-build clean-cygwin-build clean-installer
 	rm -f $(env-build)
 
-$(sage-build): $(cygwin-build) $(SAGE_STARTED)
+$(gap-build): $(cygwin-build) $(GAP_STARTED)
 	# TODO: remove this, does nothing
 	@touch $@
 
-clean-sage-build:
-	rm -rf $(SAGE_ROOT_BUILD)
-	rm -f $(sage-build)
+clean-gap-build:
+	rm -rf $(GAP_ROOT_BUILD)
+	rm -f $(gap-build)
 
 
 $(cygwin-runtime-extras): $(cygwin-runtime)
 	echo "::group::gap-prep-runtime-extras"
 	$(TOOLS)/gap-prep-runtime-extras "$(ENV_RUNTIME_DIR)" "$(CYGWIN_EXTRAS)" \
-		"$(SAGE_VERSION)"
+		"$(GAP_VERSION)"
 	echo "::endgroup::"
 	# Set apt-cyg to use a non-local mirror in the runtime env
 	echo "::group::apt-cyg mirror"
@@ -171,7 +171,7 @@ clean-cygwin-build:
 	rm -rf $(ENV_BUILD_DIR)
 	rm -f $(cygwin-build)
 
-clean-cygwin-runtime: clean-sage-runtime
+clean-cygwin-runtime: clean-gap-runtime
 	rm -rf $(ENV_RUNTIME_DIR)
 	rm -f $(cygwin-runtime)
 	rm -f $(cygwin-runtime-extras)
@@ -184,7 +184,7 @@ clean-all: clean-envs clean-installer
 
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
-$(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
+$(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	$(eval ENV_TMP := $(shell mktemp -d))
 	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
 		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
@@ -209,52 +209,52 @@ $(ENVS)/%-$(SAGE_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	# environment may be updated
 	touch "$(STAMPS)/cygwin-$(subst $(ENVS)/,,$@)"
 
-SAGE_START_CMD?="cd $(SAGE_ROOT) && make"
-SAGE_BUILD_PACKAGES?="cd $(SAGE_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
+GAP_START_CMD?="cd $(GAP_ROOT) && make"
+GAP_BUILD_PACKAGES?="cd $(GAP_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
 
-$(SAGE_STARTED): $(SAGE_MAKEFILE)
+$(GAP_STARTED): $(GAP_MAKEFILE)
 	echo "::group::Start"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_START_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_START_CMD)
 	echo "::endgroup::"
 	# Install pre-installed optional packages and run make build again to
 	# intall sagelib optional extensions that use those packages
 	echo "::group::Build Packages"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_BUILD_PACKAGES)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_BUILD_PACKAGES)
 	echo "::endgroup::"
 		
 
 
-SAGE_RUN_CONFIGURE_CMD?="cd $(SAGE_ROOT) && make -j2"
-$(SAGE_MAKEFILE): $(SAGE_CONFIGURE)
+GAP_RUN_CONFIGURE_CMD?="cd $(GAP_ROOT) && make -j2"
+$(GAP_MAKEFILE): $(GAP_CONFIGURE)
 	echo "::group::make"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_RUN_CONFIGURE_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_RUN_CONFIGURE_CMD)
 	echo "::endgroup::"
 
 
-SAGE_MAKE_CONFIGURE_CMD?="cd $(SAGE_ROOT) && ./configure"
-$(SAGE_CONFIGURE): | $(SAGE_ROOT_BUILD)
+GAP_MAKE_CONFIGURE_CMD?="cd $(GAP_ROOT) && ./configure"
+$(GAP_CONFIGURE): | $(GAP_ROOT_BUILD)
 	echo "::group::configure"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(SAGE_MAKE_CONFIGURE_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_MAKE_CONFIGURE_CMD)
 	echo "::endgroup::"
 
 
-$(SAGE_ROOT_BUILD): $(cygwin-build)
-	[ -d $(dir $(SAGE_ROOT_BUILD)) ] || mkdir $(dir $(SAGE_ROOT_BUILD))
+$(GAP_ROOT_BUILD): $(cygwin-build)
+	[ -d $(dir $(GAP_ROOT_BUILD)) ] || mkdir $(dir $(GAP_ROOT_BUILD))
 	# Get gap into the right place.
-	#   If there exists neighbouring directory gap-$(SAGE_VERSION) e.g.
-	#   gap-4.11.1, then use that version; move into $(SAGE_ROOT_BUILD).
-	#   Else clone into $(SAGE_ROOT) using $(SAGE_GIT) & $(SAGE_BRANCH).
-	# Note that $(SAGE_ROOT) = $(SAGE_ROOT_BUILD)/gap-$(SAGE_VERSION).
-	if [ -d ../gap-$(SAGE_VERSION) ]; then \
-		mv ../gap-$(SAGE_VERSION) $(SAGE_ROOT_BUILD); \
+	#   If there exists neighbouring directory gap-$(GAP_VERSION) e.g.
+	#   gap-4.11.1, then use that version; move into $(GAP_ROOT_BUILD).
+	#   Else clone into $(GAP_ROOT) using $(GAP_GIT) & $(GAP_BRANCH).
+	# Note that $(GAP_ROOT) = $(GAP_ROOT_BUILD)/gap-$(GAP_VERSION).
+	if [ -d ../gap-$(GAP_VERSION) ]; then \
+		mv ../gap-$(GAP_VERSION) $(GAP_ROOT_BUILD); \
 	else \
-		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(SAGE_BRANCH) $(SAGE_GIT) $(SAGE_ROOT)"; \
+		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(GAP_BRANCH) $(GAP_GIT) $(GAP_ROOT)"; \
 	fi
 	# Apply patches
-	if [ -d $(PATCHES)/$(SAGE_BRANCH) ]; then \
-		for patch in $(PATCHES)/$(SAGE_BRANCH)/*.patch; do \
+	if [ -d $(PATCHES)/$(GAP_BRANCH) ]; then \
+		for patch in $(PATCHES)/$(GAP_BRANCH)/*.patch; do \
 		    patch="$$(pwd)/$$patch"; \
-			(cd $(SAGE_ROOT_BUILD) && patch -p1 < $$patch); \
+			(cd $(GAP_ROOT_BUILD) && patch -p1 < $$patch); \
 		done; \
 	fi
 

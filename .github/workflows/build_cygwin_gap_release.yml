@@ -29,7 +29,7 @@ jobs:
     - uses: gap-actions/setup-cygwin-for-gap@v1
 
     - name: Compile GAP and download packages
-      run: bash release_gap.sh ARCH=${{ matrix.arch }} SAGE_VERSION=${{ matrix.gapbranch }}
+      run: bash release_gap.sh ARCH=${{ matrix.arch }} GAP_VERSION=${{ matrix.gapbranch }}
       shell: C:\cygwin64\bin\bash.exe --login -o igncr '{0}'
 
     - name: Upload release

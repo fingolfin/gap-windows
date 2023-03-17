@@ -5,13 +5,13 @@
 # unneeded files, stripping binaries, etc.
 #
 # The one thing it does not do is to run rebase; this needs to be done using a
-# subcyg shell see the $(SAGE_ROOT_RUNTIME) target in the Makefile.
+# subcyg shell see the $(GAP_ROOT_RUNTIME) target in the Makefile.
 set -x
 
-SAGE_ROOT_RUNTIME="$1"
-SAGE_ROOT="$2"
+GAP_ROOT_RUNTIME="$1"
+GAP_ROOT="$2"
 
-cd "$SAGE_ROOT_RUNTIME"
+cd "$GAP_ROOT_RUNTIME"
 ls
 echo $(pwd)
 
@@ -26,7 +26,7 @@ rm -f ../../run-gap.sh
 
 echo "#!/usr/bin/env bash" > ../../run-gap.sh
 echo 'cd $(cygpath --mydocs)' >> ../../run-gap.sh
-echo "${SAGE_ROOT}/gap" >> ../../run-gap.sh
+echo "${GAP_ROOT}/gap" >> ../../run-gap.sh
 
 rm -f ../../gapicon.ico
 cp cnf/cygwin/gapicon.ico ../../gapicon.ico

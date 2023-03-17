@@ -4,9 +4,9 @@
 
 ENV_RUNTIME_DIR="$1"
 CYGWIN_EXTRAS="$2"
-SAGE_VERSION="$3"
+GAP_VERSION="$3"
 
-if [ -z "$ENV_RUNTIME_DIR" -o -z "$CYGWIN_EXTRAS" -o -z "$SAGE_VERSION" ]; then
+if [ -z "$ENV_RUNTIME_DIR" -o -z "$CYGWIN_EXTRAS" -o -z "$GAP_VERSION" ]; then
     # Be extra safe here; e.g. if $CYGWIN_EXTRAS is missing then the next
     # line will try to copy all of /
     echo "gap-prep-runtime-extras missing arguments" >&2
