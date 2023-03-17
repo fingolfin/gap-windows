@@ -4,37 +4,37 @@
 #define MyAppName "GAP"
 
 
-#ifndef SageVersion
-  #error SageVersion must be defined--pass /DSageVersion=<version> to InnoSetup with the correct version
+#ifndef GapVersion
+  #error GapVersion must be defined--pass /DGapVersion=<version> to InnoSetup with the correct version
 #endif
 
 #ifndef InstallerVersion
   #error InstallerVersion must be defined--pass /DInstallerVersion=<version> to InnoSetup with the correct version
 #endif
 
-#ifndef SageName
-  #error SageName must be defined--pass /DSageName=<name> to InnoSetup with the correct version
+#ifndef GapName
+  #error GapName must be defined--pass /DGapName=<name> to InnoSetup with the correct version
 #endif
 
 
-#ifndef SageArch
-  #define SageArch "x86_64"
+#ifndef GapArch
+  #define GapArch "x86_64"
 #endif
 
-#if SageArch == "x86_64"
+#if GapArch == "x86_64"
   #define MyArchitecturesAllowed "x64"
 #else
   #define MyArchitecturesAllowed "x86 x64"
 #endif
 
 
-#define MyAppVersion SageVersion
+#define MyAppVersion GapVersion
 #define MyAppPublisher "The GAP Group"
 #define MyAppURL "https://www.gap-system.org"
 #define MyAppExeName "gap-mintty.bat"
 
 
-#define SageGroupName MyAppName + "-" + MyAppVersion
+#define GapGroupName MyAppName + "-" + MyAppVersion
 
 #ifndef EnvsDir
   #define EnvsDir "envs"
@@ -44,7 +44,7 @@
   #define OutputDir "dist"
 #endif
 
-#define Source      EnvsDir + "\runtime-" + SageVersion + "-" + SageArch
+#define Source      EnvsDir + "\runtime-" + GapVersion + "-" + GapArch
 
 #define Runtime     "{app}\runtime"
 #define Bin         Runtime + "\bin"
@@ -68,7 +68,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=gap-{#MyAppVersion}-{#SageArch}
+OutputBaseFilename=gap-{#MyAppVersion}-{#GapArch}
 Compression=lzma2
 LZMANumBlockThreads=6
 SolidCompression=yes
@@ -104,8 +104,8 @@ Name: "{#Runtime}\dev\mqueue"; Permissions: users-modify
 ; Name: "{#Runtime}\home\sage"; Permissions: users-modify
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}-{#SageVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico"
-Name: "{autodesktop}\{#MyAppName}-{#SageVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico" ; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}-{#GapVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico"
+Name: "{autodesktop}\{#MyAppName}-{#GapVersion}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\gapicon.ico" ; Tasks: desktopicon
 
 
 [Run]
@@ -140,11 +140,11 @@ function ProcessInstallModeSelectPage(Page: TWizardPage): Boolean;
 begin
     if TInputOptionWizardPage(Page).CheckListBox.Checked[0] then
     begin
-        WizardForm.DirEdit.Text := ExpandConstant('{localappdata}\{#SageGroupName}');
+        WizardForm.DirEdit.Text := ExpandConstant('{localappdata}\{#GapGroupName}');
         UserInstall := True;
     end
     else begin
-        WizardForm.DirEdit.Text := ExpandConstant('{pf}\{#SageGroupName}');
+        WizardForm.DirEdit.Text := ExpandConstant('{pf}\{#GapGroupName}');
         UserInstall := False;
     end;
 

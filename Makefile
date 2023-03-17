@@ -103,7 +103,7 @@ all: $(SAGE_INSTALLER)
 
 $(SAGE_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
 	cd $(CUDIR)
-	$(ISCC) /DSageName=gap /DSageVersion=$(SAGE_VERSION) /DSageArch=$(ARCH) /Q \
+	$(ISCC) /DGapName=gap /DGapVersion=$(SAGE_VERSION) /DGapArch=$(ARCH) /Q \
 		/DInstallerVersion=$(INSTALLER_VERSION) \
 		/DSageTestInstaller=$(SAGE_TEST_INSTALLER) \
 		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(SAGEMATH_ISS)
