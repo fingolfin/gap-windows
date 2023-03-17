@@ -98,10 +98,12 @@ DIRS=$(DIST) $(DOWNLOAD) $(ENVS) $(STAMPS)
 all: $(GAP_INSTALLER)
 
 $(GAP_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
+	echo "::group::ISCC"
 	cd $(CUDIR)
 	$(ISCC) /DGapName=gap /DGapVersion=$(GAP_VERSION) /DGapArch=$(ARCH) /Q \
 		/DInstallerVersion=$(INSTALLER_VERSION) \
 		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(GAP_ISS)
+	echo "::endgroup::"
 
 clean-installer:
 	rm -f $(GAP_INSTALLER)
@@ -111,7 +113,9 @@ $(foreach target,$(TARGETS),$(eval $(target): $$($(target))))
 
 
 $(env-runtime): $(cygwin-runtime) $(gap-runtime) $(cygwin-runtime-extras)
+	echo "::group::fixup-symlinks"
 	$(TOOLS)/fixup-symlinks $(ENV_RUNTIME_DIR) > $(ENV_RUNTIME_DIR)/etc/symlinks.lst
+	echo "::endgroup::"
 	@touch $@
 
 clean-env-runtime: clean-cygwin-runtime
@@ -127,10 +131,12 @@ clean-gap-runtime:
 
 
 $(GAP_ROOT_RUNTIME): $(cygwin-runtime) $(gap-build)
+	echo "::group::gap-prep-runtime"
 	[ -d $(dir $@) ] || mkdir $(dir $@)
 	cp -rp $(GAP_ROOT_BUILD) $(dir $@)
 	# Prepare / compactify runtime environment
 	$(TOOLS)/gap-prep-runtime "$(GAP_ROOT_RUNTIME)" "$(GAP_ROOT)"
+	echo "::endgroup::"
 
 
 $(env-build): $(cygwin-build) $(gap-build)
@@ -185,6 +191,7 @@ clean-all: clean-envs clean-installer
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
+	echo "::group::cygwin setup"
 	$(eval ENV_TMP := $(shell mktemp -d))
 	"$(CYGWIN_SETUP)" --site $(CYGWIN_MIRROR) \
 		$(CYGWIN_LOCAL_INSTALL_FLAGS) \
@@ -208,37 +215,33 @@ $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	# We should re-touch the relevant stamp file since the runtime
 	# environment may be updated
 	touch "$(STAMPS)/cygwin-$(subst $(ENVS)/,,$@)"
-
-GAP_START_CMD?="cd $(GAP_ROOT) && make"
-GAP_BUILD_PACKAGES?="cd $(GAP_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
+	echo "::endgroup::"
 
 $(GAP_STARTED): $(GAP_MAKEFILE)
 	echo "::group::Start"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_START_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && make"
 	echo "::endgroup::"
 	# Install pre-installed optional packages and run make build again to
 	# intall sagelib optional extensions that use those packages
 	echo "::group::Build Packages"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_BUILD_PACKAGES)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
 	echo "::endgroup::"
 		
 
-
-GAP_RUN_CONFIGURE_CMD?="cd $(GAP_ROOT) && make -j2"
 $(GAP_MAKEFILE): $(GAP_CONFIGURE)
 	echo "::group::make"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_RUN_CONFIGURE_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && make -j2"
 	echo "::endgroup::"
 
 
-GAP_MAKE_CONFIGURE_CMD?="cd $(GAP_ROOT) && ./configure"
 $(GAP_CONFIGURE): | $(GAP_ROOT_BUILD)
 	echo "::group::configure"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" $(GAP_MAKE_CONFIGURE_CMD)
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && ./configure"
 	echo "::endgroup::"
 
 
 $(GAP_ROOT_BUILD): $(cygwin-build)
+	echo "::group::get-gap"
 	[ -d $(dir $(GAP_ROOT_BUILD)) ] || mkdir $(dir $(GAP_ROOT_BUILD))
 	# Get gap into the right place.
 	#   If there exists neighbouring directory gap-$(GAP_VERSION) e.g.
@@ -250,18 +253,22 @@ $(GAP_ROOT_BUILD): $(cygwin-build)
 	else \
 		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(GAP_BRANCH) $(GAP_GIT) $(GAP_ROOT)"; \
 	fi
+	echo "::endgroup::"
 	# Apply patches
+	echo "::group::patches"
 	if [ -d $(PATCHES)/$(GAP_BRANCH) ]; then \
 		for patch in $(PATCHES)/$(GAP_BRANCH)/*.patch; do \
 		    patch="$$(pwd)/$$patch"; \
 			(cd $(GAP_ROOT_BUILD) && patch -p1 < $$patch); \
 		done; \
 	fi
+	echo "::endgroup::"
 
 
 $(CYGWIN_SETUP): | $(DOWNLOAD)
 	(cd $(DOWNLOAD) && wget "$(CYGWIN_SETUP_URL)")
 	chmod +x $(CYGWIN_SETUP)
+	echo "::endgroup::"
 
 
 $(DIRS):
