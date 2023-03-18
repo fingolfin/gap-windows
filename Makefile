@@ -188,7 +188,6 @@ clean-envs: clean-env-runtime clean-env-build
 clean-all: clean-envs clean-installer
 
 
-
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	echo "::group::cygwin setup"
@@ -216,6 +215,7 @@ $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	# environment may be updated
 	touch "$(STAMPS)/cygwin-$(subst $(ENVS)/,,$@)"
 	echo "::endgroup::"
+
 
 $(GAP_STARTED): $(GAP_MAKEFILE)
 	echo "::group::Start"
@@ -266,6 +266,7 @@ $(GAP_ROOT_BUILD): $(cygwin-build)
 
 
 $(CYGWIN_SETUP): | $(DOWNLOAD)
+	echo "::group::download"
 	(cd $(DOWNLOAD) && wget "$(CYGWIN_SETUP_URL)")
 	chmod +x $(CYGWIN_SETUP)
 	echo "::endgroup::"
