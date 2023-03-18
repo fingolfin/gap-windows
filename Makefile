@@ -1,7 +1,6 @@
 TARGETS=env-build env-runtime cygwin-build cygwin-runtime gap-build \
         gap-runtime cygwin-extras-runtime
-.PHONY: all $(TARGETS) $(addprefix clean-,$(TARGETS)) clean-envs \
-	    clean-installer clean-all
+.PHONY: all $(TARGETS)
 
 ############################ Configurable Variables ###########################
 
@@ -101,9 +100,6 @@ $(GAP_INSTALLER): $(SOURCES) $(env-runtime) | $(DIST)
 		/DEnvsDir="$(ENVS)" /DOutputDir="$(DIST)" $(GAP_ISS)
 	@echo "::endgroup::"
 
-clean-installer:
-	rm -f $(GAP_INSTALLER)
-
 
 $(foreach target,$(TARGETS),$(eval $(target): $$($(target))))
 
@@ -114,17 +110,9 @@ $(env-runtime): $(cygwin-runtime) $(gap-runtime) $(cygwin-runtime-extras)
 	@echo "::endgroup::"
 	@touch $@
 
-clean-env-runtime: clean-cygwin-runtime
-	rm -f $(env-runtime)
-
 
 $(gap-runtime): $(GAP_ROOT_RUNTIME)
 	@touch $@
-
-clean-gap-runtime:
-	rm -rf $(GAP_ROOT_RUNTIME)
-	rm -f $(gap-runtime)
-
 
 $(GAP_ROOT_RUNTIME): $(cygwin-runtime) $(gap-build)
 	@echo "::group::gap-prep-runtime"
@@ -138,16 +126,10 @@ $(GAP_ROOT_RUNTIME): $(cygwin-runtime) $(gap-build)
 $(env-build): $(cygwin-build) $(gap-build)
 	@touch $@
 
-clean-env-build: clean-gap-build clean-cygwin-build clean-installer
-	rm -f $(env-build)
 
 $(gap-build): $(cygwin-build) $(GAP_STARTED)
 	# TODO: remove this, does nothing
 	@touch $@
-
-clean-gap-build:
-	rm -rf $(GAP_ROOT_BUILD)
-	rm -f $(gap-build)
 
 
 $(cygwin-runtime-extras): $(cygwin-runtime)
@@ -161,28 +143,9 @@ $(cygwin-runtime-extras): $(cygwin-runtime)
 	@echo "::endgroup::"
 	@touch $@
 
-# Right now the only effective way to roll back cygwin-runtime-extras
-# is to clean the entire runtime cygwin environment
-clean-cygwin-runtime-extras: clean-cygwin-runtime
-
 
 $(STAMPS)/cygwin-%: | $(ENVS)/% $(STAMPS)
 	@touch $@
-
-clean-cygwin-build:
-	rm -rf $(ENV_BUILD_DIR)
-	rm -f $(cygwin-build)
-
-clean-cygwin-runtime: clean-gap-runtime
-	rm -rf $(ENV_RUNTIME_DIR)
-	rm -f $(cygwin-runtime)
-	rm -f $(cygwin-runtime-extras)
-
-clean-envs: clean-env-runtime clean-env-build
-
-
-clean-all: clean-envs clean-installer
-
 
 .SECONDARY: $(ENV_BUILD_DIR) $(ENV_RUNTIME_DIR)
 $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
