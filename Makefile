@@ -41,7 +41,6 @@ CYGWIN_EXTRAS?=cygwin_extras
 ENV_BUILD_DIR=$(ENVS)/build-$(GAP_VERSION)-$(ARCH)
 ENV_RUNTIME_DIR=$(ENVS)/runtime-$(GAP_VERSION)-$(ARCH)
 
-GAP_GIT?=https://github.com/gap-system/gap
 GAP_ROOT=/opt/gap-$(GAP_VERSION)
 GAP_ROOT_BUILD=$(ENV_BUILD_DIR)$(GAP_ROOT)
 GAP_ROOT_RUNTIME=$(ENV_RUNTIME_DIR)$(GAP_ROOT)
@@ -63,8 +62,6 @@ GAP_ENVVARS:=\
 GAP_OPTIONAL_PACKAGES=bliss coxeter3 mcqd primecount tdlib
 
 # Outputs representing success in the GAP build process
-GAP_CONFIGURE=$(GAP_ROOT_BUILD)/configure
-GAP_MAKEFILE?=$(GAP_ROOT_BUILD)/Makefile
 GAP_STARTED?=$(GAP_ROOT_BUILD)/gap
 
 # Files used as input to ISCC
@@ -131,8 +128,8 @@ clean-gap-runtime:
 
 $(GAP_ROOT_RUNTIME): $(cygwin-runtime) $(gap-build)
 	@echo "::group::gap-prep-runtime"
-	[ -d $(dir $@) ] || mkdir $(dir $@)
-	cp -rp $(GAP_ROOT_BUILD) $(dir $@)
+	@mkdir -p $(@D)
+	cp -rp $(GAP_ROOT_BUILD) $(@D)
 	# Prepare / compactify runtime environment
 	$(TOOLS)/gap-prep-runtime "$(GAP_ROOT_RUNTIME)" "$(GAP_ROOT)"
 	@echo "::endgroup::"
@@ -216,43 +213,27 @@ $(ENVS)/%-$(GAP_VERSION)-$(ARCH): cygwin-gap-%-$(ARCH).list $(CYGWIN_SETUP)
 	@echo "::endgroup::"
 
 
-$(GAP_STARTED): $(GAP_MAKEFILE)
-	@echo "::group::Start"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && make"
+$(GAP_STARTED): | $(GAP_ROOT_BUILD)
+	@echo "::group::get-gap"
+	@mkdir -p $(dir $(GAP_ROOT_BUILD))
+	mv ../gap-$(GAP_VERSION) $(GAP_ROOT_BUILD);
 	@echo "::endgroup::"
-	# Install pre-installed optional packages and run make build again to
-	# intall sagelib optional extensions that use those packages
-	@echo "::group::Build Packages"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && cd pkg && (../bin/BuildPackages.sh --parallel || true)"
+	#
+	@echo "::group::configure"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && ./configure"
 	@echo "::endgroup::"
-		
-
-$(GAP_MAKEFILE): $(GAP_CONFIGURE)
+	#
 	@echo "::group::make"
 	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && make -j2"
 	@echo "::endgroup::"
-
-
-$(GAP_CONFIGURE): | $(GAP_ROOT_BUILD)
-	@echo "::group::configure"
-	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT) && ./configure"
+	#
+	# build GAP packages
+	@echo "::group::Build Packages"
+	$(SUBCYG) "$(ENV_BUILD_DIR)" "cd $(GAP_ROOT)/pkg && (../bin/BuildPackages.sh --parallel || true)"
 	@echo "::endgroup::"
 
 
 $(GAP_ROOT_BUILD): $(cygwin-build)
-	@echo "::group::get-gap"
-	[ -d $(dir $(GAP_ROOT_BUILD)) ] || mkdir $(dir $(GAP_ROOT_BUILD))
-	# Get gap into the right place.
-	#   If there exists neighbouring directory gap-$(GAP_VERSION) e.g.
-	#   gap-4.11.1, then use that version; move into $(GAP_ROOT_BUILD).
-	#   Else clone into $(GAP_ROOT) using $(GAP_GIT) & $(GAP_BRANCH).
-	# Note that $(GAP_ROOT) = $(GAP_ROOT_BUILD)/gap-$(GAP_VERSION).
-	if [ -d ../gap-$(GAP_VERSION) ]; then \
-		mv ../gap-$(GAP_VERSION) $(GAP_ROOT_BUILD); \
-	else \
-		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(GAP_BRANCH) $(GAP_GIT) $(GAP_ROOT)"; \
-	fi
-	@echo "::endgroup::"
 
 
 $(CYGWIN_SETUP): | $(DOWNLOAD)
