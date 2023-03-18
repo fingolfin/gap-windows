@@ -34,7 +34,6 @@ cygwin-runtime-extras=$(STAMPS)/cygwin-runtime-extras-$(GAP_VERSION)-$(ARCH)
 ###############################################################################
 
 # Resource paths
-PATCHES?=patches
 CYGWIN_EXTRAS?=cygwin_extras
 #RESOURCES?=resources
 #ICONS:=$(wildcard $(RESOURCES)/*.bmp) $(wildcard $(RESOURCES)/*.ico)
@@ -252,15 +251,6 @@ $(GAP_ROOT_BUILD): $(cygwin-build)
 		mv ../gap-$(GAP_VERSION) $(GAP_ROOT_BUILD); \
 	else \
 		$(SUBCYG) "$(ENV_BUILD_DIR)" "cd /opt && git clone --single-branch --branch $(GAP_BRANCH) $(GAP_GIT) $(GAP_ROOT)"; \
-	fi
-	@echo "::endgroup::"
-	# Apply patches
-	@echo "::group::patches"
-	if [ -d $(PATCHES)/$(GAP_BRANCH) ]; then \
-		for patch in $(PATCHES)/$(GAP_BRANCH)/*.patch; do \
-		    patch="$$(pwd)/$$patch"; \
-			(cd $(GAP_ROOT_BUILD) && patch -p1 < $$patch); \
-		done; \
 	fi
 	@echo "::endgroup::"
 
