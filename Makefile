@@ -124,6 +124,7 @@ envs/%-$(GAP_VERSION)-x86_64: cygwin-gap-%-x86_64.list
 
 	# We should re-touch the relevant stamp file since the runtime
 	# environment may be updated
+	mkdir -p .stamps
 	touch ".stamps/cygwin-$(subst envs/,,$@)"
 	@echo "::endgroup::"
 
