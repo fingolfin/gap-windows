@@ -27,12 +27,6 @@ libzmq-devel   X
 singular   X
 libboost-devel X
 perl   X
-texlive                    X
-texlive-collection-basic   X
-texlive-collection-latex   X
-texlive-collection-latexrecommended   X
-texlive-collection-latexextra   X
-texlive-collection-fontsrecommended X
 xdg-utils X
 graphviz x
 cddlib-devel    x
