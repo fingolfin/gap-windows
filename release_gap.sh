@@ -2,9 +2,6 @@
 
 set -ex
 
-#GAP_VERSION=master
-INSTALLER_VERSION=0.6.3
-
 # Path to the Inno Setup executable
 ISCC="/cygdrive/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
 
@@ -21,8 +18,6 @@ GAP_ROOT_RUNTIME=${ENV_RUNTIME_DIR}${GAP_ROOT}
 
 # URL to download the Cygwin setup.exe
 CYGWIN_MIRROR=http://mirrors.kernel.org/sourceware/cygwin/
-
-GAP_INSTALLER=dist/gap-${GAP_VERSION}-v${INSTALLER_VERSION}.exe
 
 
 # download
@@ -120,7 +115,5 @@ echo "::endgroup::"
 echo "::group::ISCC"
 mkdir -p dist
 #cd ${CUDIR}
-"${ISCC}" /DGapName=gap /DGapVersion=${GAP_VERSION} /DGapArch=x86_64 /Q \
-    /DInstallerVersion=${INSTALLER_VERSION} \
-    /DEnvsDir="envs" /DOutputDir="dist" gap.iss
+"${ISCC}" /DGapVersion=${GAP_VERSION} /DGapArch=x86_64 /Q gap.iss
 echo "::endgroup::"
