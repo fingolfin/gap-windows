@@ -3,9 +3,6 @@
 # Script which performs cleanup of files in the runtime environment in
 # preparation for bundling.  This performs various tasks such as removing
 # unneeded files, stripping binaries, etc.
-#
-# The one thing it does not do is to run rebase; this needs to be done using a
-# subcyg shell see the $(GAP_ROOT_RUNTIME) target in the Makefile.
 set -x
 
 GAP_ROOT_RUNTIME="$1"

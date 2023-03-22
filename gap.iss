@@ -3,19 +3,11 @@
 
 #define MyAppName "GAP"
 
+#define InstallerVersion "0.7.0"
 
 #ifndef GapVersion
   #error GapVersion must be defined--pass /DGapVersion=<version> to InnoSetup with the correct version
 #endif
-
-#ifndef InstallerVersion
-  #error InstallerVersion must be defined--pass /DInstallerVersion=<version> to InnoSetup with the correct version
-#endif
-
-#ifndef GapName
-  #error GapName must be defined--pass /DGapName=<name> to InnoSetup with the correct version
-#endif
-
 
 #ifndef GapArch
   #define GapArch "x86_64"
@@ -36,13 +28,8 @@
 
 #define GapGroupName MyAppName + "-" + MyAppVersion
 
-#ifndef EnvsDir
-  #define EnvsDir "envs"
-#endif
-
-#ifndef OutputDir
-  #define OutputDir "dist"
-#endif
+#define EnvsDir "envs"
+#define OutputDir "dist"
 
 #define Source      EnvsDir + "\runtime-" + GapVersion + "-" + GapArch
 
