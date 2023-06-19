@@ -24,8 +24,8 @@ def main(argv=None):
     with args.file as f:
         packages = []
         for line in f:
-            package, version = [s.strip() for s in line.split()][:2]
-            packages.append((package, version))
+            package = [s.strip() for s in line.split()][:1]
+            packages.append((package))
 
     print(','.join(p[0] for p in packages))
 

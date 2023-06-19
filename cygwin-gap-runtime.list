@@ -1,17 +1,17 @@
-lib4ti2-util   X
-git X
-libgmp10   X
-libmpc3 X
-libmpfr6 X
-libreadline7   X
-zlib0   X
-libncursesw10   X
-libpopt0   X
-libcurl4   X
-libidn2   X
-libssl1.1   X
-libzmq5   X
-singular X
-xdg-utils X
-graphviz x
-cddlib0   X
+cddlib0
+git
+graphviz
+lib4ti2-util
+libcurl4
+libgmp10
+libidn2
+libmpc3
+libmpfr6
+libncursesw10
+libpopt0
+libreadline7
+libssl1.1
+libzmq5
+singular
+xdg-utils
+zlib0

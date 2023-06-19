@@ -1,32 +1,32 @@
-wget   X
-git   X
-gcc-core   X
-gcc-g++   X
-gcc-core   X
-zlib-devel   X
-m4   X
-make   X
-automake   X
-autoconf X
-libtool   X
-lib4ti2-util   X
-libgmp-devel   X
-libmpc-devel   X
-libmpfr-devel   X
-libreadline-devel   X
-libncurses-devel   X
-libpopt-devel   X
-libcurl-devel   X
-libidn2-devel   X
-libssl-devel   X
-libssh-devel   X
-openldap-devel   X
-libiconv-devel   X
-libsasl2-devel   X
-libzmq-devel   X
-singular   X
-libboost-devel X
-perl   X
-xdg-utils X
-graphviz x
-cddlib-devel    x
+autoconf
+automake
+cddlib-devel
+gcc-core
+gcc-core
+gcc-g++
+git
+graphviz
+lib4ti2-util
+libboost-devel
+libcurl-devel
+libgmp-devel
+libiconv-devel
+libidn2-devel
+libmpc-devel
+libmpfr-devel
+libncurses-devel
+libpopt-devel
+libreadline-devel
+libsasl2-devel
+libssh-devel
+libssl-devel
+libtool
+libzmq-devel
+m4
+make
+openldap-devel
+perl
+singular
+wget
+xdg-utils
+zlib-devel
