@@ -33,7 +33,7 @@ mkdir -p envs
 download/setup-x86_64.exe --site ${CYGWIN_MIRROR} \
     --root "$(cygpath -w -a envs/build-${GAP_VERSION}-x86_64)" \
     --arch x86_64 --no-admin --no-shortcuts --quiet-mode \
-    --packages $(tools/setup-package-list cygwin-gap-build-x86_64.list)
+    --packages $(tools/setup-package-list cygwin-gap-build.list)
 
 # Install symlinks for CCACHE
 if [ -x envs/build-${GAP_VERSION}-x86_64/usr/bin/ccache ]; then
@@ -51,7 +51,7 @@ mkdir -p envs
 download/setup-x86_64.exe --site ${CYGWIN_MIRROR} \
     --root "$(cygpath -w -a envs/runtime-${GAP_VERSION}-x86_64)" \
     --arch x86_64 --no-admin --no-shortcuts --quiet-mode \
-    --packages $(tools/setup-package-list cygwin-gap-runtime-x86_64.list)
+    --packages $(tools/setup-package-list cygwin-gap-runtime.list)
 
 # Install symlinks for CCACHE
 if [ -x envs/runtime-${GAP_VERSION}-x86_64/usr/bin/ccache ]; then
