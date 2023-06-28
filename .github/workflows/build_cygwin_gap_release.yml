@@ -24,13 +24,30 @@ jobs:
     steps:
     - run: choco install InnoSetup
 
-    - uses: actions/checkout@v2
+    # clone GAP repository
+    # TODO: should instead create or download a recent release snapshot tarball
+    - uses: actions/checkout@v3
+      with:
+        repository: gap-system/gap
+        path: gap-${{ matrix.gapbranch }}
+        ref: ${{ matrix.gapbranch }}
 
-    - uses: gap-actions/setup-cygwin-for-gap@v1
+    # clone the gap-windows repository
+    - uses: actions/checkout@v3
+      with:
+        path: gap-windows
+
+    - uses: gap-actions/setup-cygwin@v1
 
     - name: Compile GAP and download packages
-      run: bash release_gap.sh ARCH=${{ matrix.arch }} GAP_VERSION=${{ matrix.gapbranch }}
-      shell: C:\cygwin64\bin\bash.exe --login -o igncr '{0}'
+      shell: C:\cygwin64\bin\bash.exe --login --norc -o igncr '{0}'
+      run: |
+        cd gap-${{ matrix.gapbranch }} && ./autogen.sh && cd ..
+        cd ${GITHUB_WORKSPACE}/gap-windows
+        bash release_gap.sh
+      env:
+        ARCH: ${{ matrix.arch }}
+        GAP_VERSION: ${{ matrix.gapbranch }}
 
     - name: Upload release
       uses: actions/upload-artifact@v2
