@@ -27,7 +27,7 @@ def main(argv=None):
             package = [s.strip() for s in line.split()][:1]
             packages.append((package))
 
-    print(','.join(p[0] for p in packages))
+    print(','.join(p[0] for p in packages), end="")
 
 
 if __name__ == '__main__':
