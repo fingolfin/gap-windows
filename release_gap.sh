@@ -30,10 +30,11 @@ echo "::endgroup::"
 # cygwin setup
 echo "::group::cygwin setup build"
 mkdir -p envs
+packages=$(for x in $(cat cygwin-gap-build.list) ; do printf "%s," $x ; done)
 download/setup-x86_64.exe --site ${CYGWIN_MIRROR} \
     --root "$(cygpath -w -a envs/build-${GAP_VERSION}-x86_64)" \
-    --arch x86_64 --no-admin --no-shortcuts --quiet-mode \
-    --packages $(tools/setup-package-list cygwin-gap-build.list)
+    --packages $packages \
+    --arch x86_64 --no-admin --no-shortcuts --quiet-mode
 
 # Install symlinks for CCACHE
 if [ -x envs/build-${GAP_VERSION}-x86_64/usr/bin/ccache ]; then
@@ -48,10 +49,11 @@ echo "::endgroup::"
 # cygwin setup
 echo "::group::cygwin setup runtime"
 mkdir -p envs
+packages=$(for x in $(cat cygwin-gap-runtime.list) ; do printf "%s," $x ; done)
 download/setup-x86_64.exe --site ${CYGWIN_MIRROR} \
     --root "$(cygpath -w -a envs/runtime-${GAP_VERSION}-x86_64)" \
-    --arch x86_64 --no-admin --no-shortcuts --quiet-mode \
-    --packages $(tools/setup-package-list cygwin-gap-runtime.list)
+    --packages $packages \
+    --arch x86_64 --no-admin --no-shortcuts --quiet-mode
 
 # Install symlinks for CCACHE
 if [ -x envs/runtime-${GAP_VERSION}-x86_64/usr/bin/ccache ]; then
