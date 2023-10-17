@@ -22,6 +22,7 @@ find . -type f \( -name '*.exe' -o -name '*.dll' -o -name '*.a' -o -name '*.o' -
 rm -f ../../run-gap.sh
 
 echo "#!/usr/bin/env bash" > ../../run-gap.sh
+echo "stty susp undef # disable ctrl-z" >> ../../run-gap.sh
 echo 'cd $(cygpath --mydocs)' >> ../../run-gap.sh
 echo "${GAP_ROOT}/gap" >> ../../run-gap.sh
 
