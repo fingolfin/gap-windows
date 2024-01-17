@@ -78,6 +78,12 @@ echo "::group::make"
 tools/subcyg "${ENV_BUILD_DIR}" "cd ${GAP_ROOT} && make -j2"
 echo "::endgroup::"
 
+# get GAP packages (if not already present)
+echo "::group::Get Packages"
+tools/subcyg "${ENV_BUILD_DIR}" "cd ${GAP_ROOT} && make bootstrap-pkg-full"
+tools/subcyg "${ENV_BUILD_DIR}" "cd ${GAP_ROOT} && rm -f packages.tar.gz"
+echo "::endgroup::"
+
 # build GAP packages
 echo "::group::Build Packages"
 tools/subcyg "${ENV_BUILD_DIR}" "cd ${GAP_ROOT}/pkg && (../bin/BuildPackages.sh --parallel || true)"
