@@ -72,7 +72,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "gap_resources\gap.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gap_resources\gap-mintty.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Source}\*"; DestDir: "{#Runtime}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#Source}\gapicon.ico"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PostInstall;
+Source: "gap_resources\gapicon.ico"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PostInstall;
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
