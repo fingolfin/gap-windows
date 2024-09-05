@@ -26,14 +26,14 @@ jobs:
 
     # clone GAP repository
     # TODO: should instead create or download a recent release snapshot tarball
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: gap-system/gap
         path: gap-${{ matrix.gapbranch }}
         ref: ${{ matrix.gapbranch }}
 
     # clone the gap-windows repository
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: gap-windows
 
@@ -50,7 +50,7 @@ jobs:
         GAP_VERSION: ${{ matrix.gapbranch }}
 
     - name: Upload release
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: GAP Windows installer - ${{ matrix.arch }}
         path: Output/*
